@@ -1,0 +1,95 @@
+{
+  "app": [
+    {
+      "defaultName": "ticket",
+      "statutPanelName": "Status",
+      "objectPanelName": "list de ticket",
+      "themeList": [
+        {
+          "name": "Maintenance",
+          "defaultColor": "blue",
+          "selectedStatusRef": "ticket"
+        },
+        {
+          "name": "Nétoyage",
+          "defaultColor": "#12D2E6",
+          "selectedStatusRef": "ticket"
+        },
+        {
+          "name": "Sécurité",
+          "defaultColor": "red",
+          "selectedStatusRef": "test"
+        }
+      ],
+      "statusRef": [
+        {
+          "statusRefName": "ticket",
+          "statusList": [
+            { "name": "Prise en charge", "defaultColor": "#E48E12" },
+            { "name": "En cours de résolution", "defaultColor": "#C8DC0F" },
+            { "name": "Résolut", "defaultColor": "green" },
+            { "name": "Non résolut", "defaultColor": "red" }
+          ]
+        },
+        {
+          "statusRefName": "test",
+          "statusList": [
+            { "name": "Prise en charge test", "defaultColor": "#E48E12" },
+            {
+              "name": "En cours de résolution test",
+              "defaultColor": "#E48E12"
+            },
+            { "name": "Résolut test", "defaultColor": "#E48E12" },
+            { "name": "Non résolut test", "defaultColor": "#E48E12" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "defaultName": "DOE",
+      "statutPanelName": "Status",
+      "objectPanelName": "DOE",
+      "themeList": [
+        {
+          "name": "Maintenance",
+          "defaultColor": "red",
+          "selectedStatusRef": "ticket"
+        },
+        {
+          "name": "Nétoyage",
+          "defaultColor": "green",
+          "selectedStatusRef": "ticket"
+        },
+        {
+          "name": "Sécurité",
+          "defaultColor": "red",
+          "selectedStatusRef": "test"
+        }
+      ],
+      "statusRef": [
+        {
+          "statusRefName": "ticket",
+          "statusList": [
+            { "name": "Prise en charge", "defaultColor": "#E48E12" },
+            { "name": "En cours de résolution", "defaultColor": "#E48E12" },
+            { "name": "Résolut", "defaultColor": "#E48E12" },
+            { "name": "Non résolut", "defaultColor": "#E48E12" }
+          ]
+        },
+        {
+          "statusRefName": "test",
+          "statusList": [
+            { "name": "Prise en charge test", "defaultColor": "#E48E12" },
+            {
+              "name": "En cours de résolution test",
+              "defaultColor": "#E48E12"
+            },
+            { "name": "Résolut test", "defaultColor": "#E48E12" },
+            { "name": "Non résolut test", "defaultColor": "#E48E12" }
+          ]
+        }
+      ]
+    }
+  ]
+}
