@@ -38,6 +38,7 @@ export default {
         selectedObject: {},
         panel: {}
       },
+      newNode: undefined,
       multiple: [],
       files: {},
       app: undefined,
@@ -56,7 +57,7 @@ export default {
         this.currentPanel.panel = panel;
       });
       spinal.eventBus.$on("getNodeClick", node => {
-        this.currentPanel.selectedObject = node;
+        this.newNode = node;
       });
       spinal.eventBus.$on("openFilePanel", node => {
         // console.log(selectedObject.node.element);
@@ -152,14 +153,14 @@ export default {
       console.log("file");
       // console.log(button);
       // console.log(this.currentPanel.selectedObject);
-      spinal.eventBus.$emit("openFilePanel", this.currentPanel.selectedObject);
+      spinal.eventBus.$emit("openFilePanel", this.newNode);
       // event.$emit("openResumePanel", this.data.dbIdArray[0], 2);
     }
   },
   mounted() {
     viewer = window.spinal.ForgeViewer.viewer;
     spinalSystem = window.spinal.spinalSystem;
-    spinal.circularMenu.addButton(this.file, "attach_file");
+    spinal.circularMenu.addButton(this.file, "folder");
     console.log(this.inspector);
     let interval = setInterval(() => {
       if (typeof spinal.contextStudio.graph != "undefined") {

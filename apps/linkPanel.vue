@@ -56,6 +56,7 @@ export default {
         selectedObject: {},
         panel: {}
       },
+      newNode: undefined,
       multiple: [],
       tabDisplay: [],
       link: "",
@@ -76,7 +77,7 @@ export default {
       });
       spinal.eventBus.$on("getNodeClick", node => {
         console.log("le panel files a été créer");
-        this.currentPanel.selectedObject = node;
+        this.newNode = node;
       });
       spinal.eventBus.$on("openLinkPanel", node => {
         // console.log(selectedObject);
@@ -191,7 +192,7 @@ export default {
     openLink: function(button) {
       console.log("link");
       // console.log(button);
-      spinal.eventBus.$emit("openLinkPanel", this.currentPanel.selectedObject);
+      spinal.eventBus.$emit("openLinkPanel", this.newNode);
 
       // event.$emit("openResumePanel", this.data.dbIdArray[0], 2);
     }

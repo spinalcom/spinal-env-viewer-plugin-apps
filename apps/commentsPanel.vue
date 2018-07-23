@@ -69,6 +69,7 @@ export default {
         selectedObject: {},
         panel: {}
       },
+      newNode: undefined,
       message: "",
       value: "",
       active: false,
@@ -112,8 +113,9 @@ export default {
         this.currentPanel.panel = panel;
       });
       spinal.eventBus.$on("getNodeClick", node => {
+        // IL FAUT CORRIGER LA RECEPTION DU NODE ET NE PAS REMPLACER LE SELECTED OBJECT
         console.log("le panel files a été créer");
-        this.currentPanel.selectedObject = node;
+        this.newNode = node;
       });
       spinal.eventBus.$on("openCommentsPanel", node => {
         console.log(node);
@@ -264,10 +266,7 @@ export default {
     comments: function(button) {
       console.log("comments");
       // console.log(button);
-      spinal.eventBus.$emit(
-        "openCommentsPanel",
-        this.currentPanel.selectedObject
-      );
+      spinal.eventBus.$emit("openCommentsPanel", this.newNode);
 
       // event.$emit("openResumePanel", this.data.dbIdArray[0], 2);
     }
