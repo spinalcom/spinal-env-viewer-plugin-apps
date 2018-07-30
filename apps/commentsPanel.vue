@@ -115,7 +115,8 @@ export default {
       spinal.eventBus.$on("getNodeClick", node => {
         // IL FAUT CORRIGER LA RECEPTION DU NODE ET NE PAS REMPLACER LE SELECTED OBJECT
         console.log("le panel files a été créer");
-        this.newNode = node;
+        this.currentPanel.selectedObject = node;
+        this.onModelChange();
       });
       spinal.eventBus.$on("openCommentsPanel", node => {
         console.log(node);
@@ -137,8 +138,8 @@ export default {
           // console.log(node);
 
           this.currentPanel.selectedObject.element.load(item => {
-            console.log(item);
-            console.log(item.name.get());
+            // console.log(item);
+            // console.log(item.name.get());
             this.currentPanel.panel.setTitle("comments : " + item.name.get());
           });
           if (!this.currentPanel.panel.isVisible()) {
@@ -149,8 +150,8 @@ export default {
     },
     onModelChange: function() {
       this.tabDisplay = [];
-      console.log("onModelChange comments");
-      console.log(this.currentPanel.selectedObject);
+      // console.log("onModelChange comments");
+      // console.log(this.currentPanel.selectedObject);
       this.app
         .getAssociatedElementsByNodeByRelationType(
           this.currentPanel.selectedObject,
@@ -158,7 +159,7 @@ export default {
         )
         .then(tabofAllComments => {
           this.tabDisplay = tabofAllComments;
-          console.log(this.tabDisplay);
+          // console.log(this.tabDisplay);
         });
       // if (this.currentPanel.selectedObject.relations) {
       //   if (this.currentPanel.selectedObject.relations["messages" + "-"]) {
@@ -197,7 +198,7 @@ export default {
       // return convert.toLocaleDateString("fr-fr", { timeZone: "UTC" });
     },
     addComments: function() {
-      console.log("ceci est la allcommentsList");
+      // console.log("ceci est la allcommentsList");
       // console.log(this.allComments);
       let user = spinalSystem.getUser();
       if (this.message) {
@@ -225,7 +226,7 @@ export default {
       this.message = "";
     },
     removeMessage: function(comment) {
-      console.log(comment.message.get());
+      // console.log(comment.message.get());
       for (let i = 0; i < this.currentPanel.selectedObject.note.length; i++) {
         const element = this.currentPanel.selectedObject.note[i];
         if (element === comment)
@@ -266,7 +267,10 @@ export default {
     comments: function(button) {
       console.log("comments");
       // console.log(button);
-      spinal.eventBus.$emit("openCommentsPanel", this.newNode);
+      spinal.eventBus.$emit(
+        "openCommentsPanel",
+        this.currentPanel.selectedObject
+      );
 
       // event.$emit("openResumePanel", this.data.dbIdArray[0], 2);
     }
@@ -284,7 +288,7 @@ export default {
     // console.log(this.inspector);
     let interval = setInterval(() => {
       if (typeof spinal.contextStudio.graph != "undefined") {
-        console.log("CREATION OF APP FILE");
+        // console.log("CREATION OF APP FILE");
         spinal.contextStudio.graph
           .getApp("comments", ["comments"])
           .then(myApp => {

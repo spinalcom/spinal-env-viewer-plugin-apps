@@ -15,7 +15,7 @@
               </md-field>
 
 
-                    <md-dialog-actions>
+                  <md-dialog-actions>
                     <md-button class="md-primary" @click="active = false">Close</md-button>
                     <md-button class="md-primary" @click="addLink">Save</md-button>
                   </md-dialog-actions>
@@ -26,12 +26,12 @@
 
     <md-content class="md-scrollbar" style="box-sizing: border-box; overflow-y:auto; height: calc(100% - 60px)">
     <md-list>
-      <md-list-item v-if="tabDisplay.length > 0" v-for="(links, index) in tabDisplay" :key="index">
+      <md-list-item style="padding-right: 15px; padding-left: 20px;" v-if="tabDisplay.length > 0" v-for="(links, index) in tabDisplay" :key="index">
         <a :href="links.link.get()" target="_blank">{{links.name.get()}}
           <md-tooltip>{{ links.link.get()}}</md-tooltip>
         </a>
         <!-- add context menu for delete link -->
-        <contextMenuLink :links="links" :selectedObject="currentPanel.selectedObject"></contextMenuLink>
+        <contextMenuLink :links="links" :selectedObject="tabDisplay"></contextMenuLink>
       </md-list-item>
     </md-list>
     </md-content>
@@ -63,50 +63,64 @@ export default {
       nameLink: "",
       active: false,
       allLinks: {},
+      myBind: undefined,
       allLinksJson: {},
       app: undefined
     };
   },
   components: { contextMenuLink },
-  props: [],
+  props: ["myNodeProps"],
+  // watch: {
+  //   myNodeProps: function(newV, old) {
+  //     if (newV != undefined) {
+  //       this.onModelChange();
+  //       console.log("BOOOOOOOMMMMMMMMMMMMMMMMMMMMMMMMMM");
+  //     }
+  //   }
+  // },
   methods: {
     getEvent: function() {
-      event.$on("createLinkPanel", panel => {
-        console.log("le panel files a été créer");
-        this.currentPanel.panel = panel;
-      });
       spinal.eventBus.$on("getNodeClick", node => {
-        console.log("le panel files a été créer");
-        this.newNode = node;
+        console.log("get node click LINK PANEL");
+        this.currentPanel.selectedObject = node;
+        console.log(this.currentPanel.selectedObject);
+        this.onModelChange();
       });
-      spinal.eventBus.$on("openLinkPanel", node => {
-        // console.log(selectedObject);
-
-        if (this.currentPanel.selectedObject === node) {
-          if (this.currentPanel.panel.isVisible()) {
-            this.currentPanel.panel.setVisible(false);
-            this.allLinks.unbind(this.onModelChange);
-          } else {
-            this.currentPanel.panel.setVisible(true);
-            this.allLinks.bind(this.onModelChange);
-          }
-        } else {
-          // this.allLinks.bind(this.onModelChange);
-          if (this.app !== undefined) {
-            console.log(this.app);
-            this.currentPanel.selectedObject = node;
-            this.allLinks.bind(this.onModelChange);
-          }
-          console.log(this.currentPanel.selectedObject);
-          this.currentPanel.selectedObject.element.load(item => {
-            this.currentPanel.panel.setTitle("link : " + item.name.get());
-          });
-
-          if (!this.currentPanel.panel.isVisible()) {
-            this.currentPanel.panel.setVisible(true);
-          }
-        }
-      });
+      // event.$on("createLinkPanel", panel => {
+      //   // console.log("le panel files a été créer");
+      //   this.currentPanel.panel = panel;
+      // });
+      // spinal.eventBus.$on("getNodeClick", node => {
+      //   // console.log("le panel files a été créer");
+      //   this.currentPanel.selectedObject = node;
+      //   this.onModelChange();
+      // });
+      // spinal.eventBus.$on("openLinkPanel", node => {
+      //   // console.log(selectedObject);
+      //   if (this.currentPanel.selectedObject === node) {
+      //     if (this.currentPanel.panel.isVisible()) {
+      //       this.currentPanel.panel.setVisible(false);
+      //       this.allLinks.unbind(this.onModelChange);
+      //     } else {
+      //       this.currentPanel.panel.setVisible(true);
+      //       this.allLinks.bind(this.onModelChange);
+      //     }
+      //   } else {
+      //     // this.allLinks.bind(this.onModelChange);
+      //     if (this.app !== undefined) {
+      //       console.log(this.app);
+      //       this.currentPanel.selectedObject = node;
+      //       this.allLinks.bind(this.onModelChange);
+      //     }
+      //     console.log(this.currentPanel.selectedObject);
+      //     this.currentPanel.selectedObject.element.load(item => {
+      //       this.currentPanel.panel.setTitle("link : " + item.name.get());
+      //     });
+      //     if (!this.currentPanel.panel.isVisible()) {
+      //       this.currentPanel.panel.setVisible(true);
+      //     }
+      //   }
+      // });
     },
     addLink: function() {
       console.log("submit");
@@ -116,7 +130,6 @@ export default {
       myLink.name.set(this.nameLink);
       myLink.username.set(spinalSystem.getUser().username);
       myLink.owner.set(spinalSystem.getUser().id);
-
       this.currentPanel.selectedObject.addToExistingRelationByApp(
         "link",
         "link",
@@ -138,17 +151,21 @@ export default {
       // var init = 0;
 
       // console.log(this.allLinks);
-      // console.log(this.app);
+      // console.log(typeof this.myNodeProps);
       // let tab = this.app.getRelationsByType("link");
-      this.app
-        .getAssociatedElementsByNodeByRelationType(
-          this.currentPanel.selectedObject,
-          "link"
-        )
-        .then(tabofAllLink => {
-          this.tabDisplay = tabofAllLink;
-          console.log(this.tabDisplay);
-        });
+      console.log(this.currentPanel.selectedObject);
+      if (this.currentPanel.selectedObject != undefined) {
+        this.app
+          .getAssociatedElementsByNodeByRelationType(
+            this.currentPanel.selectedObject,
+            "link"
+          )
+          .then(tabofAllLink => {
+            console.log(tabofAllLink);
+            this.tabDisplay = tabofAllLink;
+            // console.log(this.tabDisplay);
+          });
+      }
       // let array = [];
       // console.log(tab);
       // if (tab != undefined) {
@@ -192,7 +209,11 @@ export default {
     openLink: function(button) {
       console.log("link");
       // console.log(button);
-      spinal.eventBus.$emit("openLinkPanel", this.newNode);
+      // spinal.eventBus.$emit("openLinkPanel", this.currentPanel.selectedObject);
+      // console.log(this.myNodeProps);
+      spinal.eventBus.$emit("openCollaboratorPanel", "link");
+      console.log("open link panel & collab panel");
+      this.onModelChange();
 
       // event.$emit("openResumePanel", this.data.dbIdArray[0], 2);
     }
@@ -201,8 +222,7 @@ export default {
     viewer = window.spinal.ForgeViewer.viewer;
     spinalSystem = window.spinal.spinalSystem;
     // console.log(this.inspector);
-    spinal.circularMenu.addButton(this.openLink, "insert_link");
-
+    this.currentPanel.selectedObject = this.myNodeProps;
     console.log("LINK PANEL");
     // console.log(window.spinal.contextStudio);
     let interval = setInterval(() => {
@@ -211,7 +231,7 @@ export default {
           console.log("CREATE APP LINK");
           this.app = app;
           this.allLinks = this.app.getCharacteristicElement();
-
+          this.myBind = this.allLinks.bind(this.onModelChange);
           console.log(this.app);
           JsonProcess.create_JsonProcess(this.app, true).then(json => {
             this.allLinksJson = json;
@@ -222,7 +242,7 @@ export default {
         // console.log(this.app);
         clearInterval(interval);
       }
-    }, 2000);
+    }, 100);
     // this.app = spinal.contextStudio;
 
     // spinalSystem.getModel().then(forgeFile => {
@@ -245,6 +265,9 @@ export default {
     //   }
     // });
     this.getEvent();
+  },
+  beforeDestroy() {
+    this.allLinks.unbind(this.myBind);
   }
 };
 </script>

@@ -1,19 +1,24 @@
 <template>
-    <md-content class="container-file" style=" box-sizing: border-box; height: calc(100% - 50px)">
-    <md-field>
-      <!---->
+  <md-content class="container-file" style=" box-sizing: border-box; height: calc(100% - 50px)">
+    <!-- <md-field>
       <md-file ref="fileupload" @md-change="createFile" v-model="multiple" multiple  />
-    </md-field>
+    </md-field> -->
+    <md-toolbar  layout="row" layout-align="center center" style="box-sizing: border-box;">
+    <import-file :app="app" :selectedObject="currentPanel.selectedObject"></import-file>
+    <md-button style="box-sizing: border-box;width: calc(49% - 16px); float: left" @click="exportDrive">Export Drive</md-button>      
+    </md-toolbar>
 
-    <md-content class=" md-scrollbar" style="box-sizing: border-box; overflow-y:auto; height: calc(100% - 88px)">
+    <span @click="goToPath(index)" v-for="(path,index) in pathTab" :key="index">{{path.name}} </span>
 
-
-    <md-list v-if="tabDisplay.length > 0">
-      <md-list-item v-for="(files, index) in tabDisplay" :key="index">
-        <div class="md-list-item-text" >{{files.name.get()}}</div>
-        <context-menu-file-panel :selectedObject="currentPanel.selectedObject" :file="files"></context-menu-file-panel>
-      </md-list-item>
-    </md-list>
+    <md-content class=" md-scrollbar" style="box-sizing: border-box; overflow-y:auto; height: calc(100% - 123px)">
+      <md-table v-if="tabDisplay.length > 0" style="padding-right: 15px; padding-left: 20px;">
+        <md-table-row @dblclick.native="clickPath(files)" v-for="(files, index) in tabDisplay" :key="index">
+          <md-table-cell md-numeric>{{files.name.get()}}</md-table-cell>
+          <md-table-cell>{{files._info.model_type.get()}}</md-table-cell>
+          <md-table-cell>{{ files.name.get() }}</md-table-cell>
+          <md-table-cell><context-menu-file-panel :selectedObject="currentPanel.selectedObject" :file="files"></context-menu-file-panel></md-table-cell>
+        </md-table-row>
+      </md-table>
     </md-content>
 
 
@@ -26,6 +31,8 @@ var spinalSystem;
 var viewer;
 import event from "../componentGlobal/event.vue";
 import contextMenuFilePanel from "./component/fileComponent/contextMenuFile.vue";
+import importFile from "./component/fileComponent/importFile.vue";
+
 import Vue from "vue";
 // import { file } from "../model/model.js";
 
@@ -35,164 +42,268 @@ export default {
   data() {
     return {
       currentPanel: {
-        selectedObject: {},
+        selectedObject: undefined,
         panel: {}
       },
       newNode: undefined,
       multiple: [],
       files: {},
+      pathTab: [],
       app: undefined,
       tabDisplay: [],
+      myBind: undefined,
+      inDirectory: undefined,
       rel: "this.currentPanel.selectedObject.relations." + "files" + "-"
     };
   },
   components: {
-    contextMenuFilePanel
+    contextMenuFilePanel,
+    importFile
   },
-  props: [],
+  props: ["myNodeProps"],
   methods: {
     getEvent: function() {
-      event.$on("createFilesPanel", panel => {
-        console.log("le panel files a été créer");
-        this.currentPanel.panel = panel;
+      // createDirectoryFile;
+      event.$on("createDirectoryFile", Directory => {
+        console.log("BIND EVENT");
+        this.inDirectory = Directory;
+        this.pathTab[0].path = this.inDirectory;
+        this.myBind = this.inDirectory.bind(this.onModelChange);
       });
       spinal.eventBus.$on("getNodeClick", node => {
-        this.newNode = node;
-      });
-      spinal.eventBus.$on("openFilePanel", node => {
-        // console.log(selectedObject.node.element);
-        // console.log(selectedObject);
-        console.log(this.files);
+        this.currentPanel.selectedObject = node;
+        this.onModelChange();
 
-        if (this.currentPanel.selectedObject === node) {
-          if (this.currentPanel.panel.isVisible()) {
-            this.currentPanel.panel.setVisible(false);
-            this.files.unbind(this.onModelChange);
-          } else {
-            this.currentPanel.panel.setVisible(true);
-            this.files.bind(this.onModelChange);
-          }
-        } else {
-          this.currentPanel.selectedObject = node;
-          this.files.bind(this.onModelChange);
-
-          this.currentPanel.selectedObject.element.load(item => {
-            this.currentPanel.panel.setTitle("file : " + item.name.get());
-          });
-          if (!this.currentPanel.panel.isVisible()) {
-            this.currentPanel.panel.setVisible(true);
-          }
+        if (this.myBind != undefined) {
+          this.inDirectory.unbind(this.myBind);
+          this.myBind = undefined;
         }
+        if (this.myBind == undefined) {
+          console.log(this.currentPanel.selectedObject);
+          this.app
+            .getAssociatedElementsByNodeByRelationType(
+              this.currentPanel.selectedObject,
+              "Files-"
+            )
+            .then(tabofAllFile => {
+              this.pathTab = [];
+              console.log(tabofAllFile);
+              if (tabofAllFile[0] != undefined) {
+                this.inDirectory = tabofAllFile[0];
+                event.$emit("getCurrentDirectory", this.inDirectory);
+                var obj = {};
+                console.log(this.inDirectory);
+                obj.name = "home /";
+                obj.path = this.inDirectory;
+                this.pathTab.push(obj);
+
+                // console.log(this.inDirectory);
+                if (this.inDirectory.length != 0)
+                  this.myBind = this.inDirectory.bind(this.onModelChange);
+              } else {
+                if (this.myBind != undefined) {
+                  this.inDirectory.unbind(this.myBind);
+                  this.myBind = undefined;
+                }
+                this.inDirectory = [];
+                var obj = {};
+                console.log(this.inDirectory);
+                obj.name = "home /";
+                obj.path = this.inDirectory;
+                this.pathTab.push(obj);
+                this.onModelChange();
+              }
+              // this.onModelChange();
+            });
+        }
+        console.log(this.currentPanel.selectedObject);
       });
     },
-    createFile: function(files) {
-      // il faut push le fichier dans this.files
-      // il faut ajouter this.currentPanel.selectedObject.node.element.spinalRelation.files.push()
 
-      for (let i = 0; i < files.length; i++) {
-        const element = files[i];
-        let filePath = new Path(element);
-        let myFile = new File(element.name, filePath);
-        this.currentPanel.selectedObject.addToExistingRelationByApp(
-          "file",
-          "file",
-          myFile
-        );
-        // spinal.contextStudio.graph
-        //   .addSimpleRelationAsync(
-        //     "files",
-        //     this.currentPanel.selectedObject,
-        //     myFile
-        //   )
-        //   .then(relation => {
-        //     this.files.push(relation);
-        //   });
-        // this.currentPanel.selectedObject.files.push(myFile);
+    onModelChange: function() {
+      if (this.tabDisplay.length > 0)
+        this.tabDisplay.splice(0, this.tabDisplay.length);
+      console.log("ON MODEL CHANGE");
+      console.log(this.inDirectory);
+      if (this.currentPanel.selectedObject != undefined) {
+        if (this.inDirectory != undefined)
+          for (let i = 0; i < this.inDirectory.length; i++) {
+            const element = this.inDirectory[i];
+            // console.log(element);
+            this.tabDisplay.push(element);
+          }
+      }
+
+      // console.log(this.app);
+      /////////////////////////////////////////////////////////
+      //        old on  model change
+      /////////////////////////////////////////////////////////
+      // if (this.currentPanel.selectedObject != undefined) {
+      //   this.app
+      //     .getAssociatedElementsByNodeByRelationType(
+      //       this.currentPanel.selectedObject,
+      //       "Files"
+      //     )
+      //     .then(tabofAllFile => {
+      //       // console.log(tabofAllFile);
+      //       if (tabofAllFile[0] != undefined)
+      //         for (let i = 0; i < tabofAllFile[0].length; i++) {
+      //           const element = tabofAllFile[0][i];
+      //           // console.log(element);
+      //           this.tabDisplay.push(element);
+      //         }
+      //       // console.log(this.tabDisplay);
+      //     });
+      // }
+      //////////////////////////////////////////////////////////////
+    },
+    exportDrive: function() {
+      // console.log(spinalSystem);
+
+      var data = spinalSystem.getPath();
+
+      var char = "";
+      var i = data.length;
+      while (char != "/") {
+        char = data[i];
+        i--;
+      }
+      var nameRevit = data.slice(i + 2, data.length);
+      // console.log(nameRevit);
+      data = data.slice(0, i + 1);
+      this.result = data + "/Files: " + nameRevit;
+
+      spinalSystem.load(this.result).then(
+        res => {
+          // callback success
+          console.log("callback success");
+          console.log(res);
+        },
+        () => {
+          // callback error
+          console.log("callback error");
+          // console.log(data);
+          spinalSystem.load(data).then(success => {
+            // console.log("create the directory in the drive");
+            // console.log(this.app);
+
+            var tab = this.app.getRelationsByType("Files");
+            var tmp = new Directory("Files: " + nameRevit);
+            // console.log(tab);
+            var BIMObjectName;
+            for (let i = 0; i < tab.length; i++) {
+              const relation = tab[i];
+              // console.log(relation);
+              relation.nodeList1[0].element.load(BIMObjectNode => {
+                BIMObjectName = BIMObjectNode.name.get();
+                // console.log(BIMObjectName);
+              });
+              for (let j = 0; j < relation.nodeList2.length; j++) {
+                const node = relation.nodeList2[j];
+                node.element.load(myOject => {
+                  // console.log(myOject);
+
+                  var newObject = new File(BIMObjectName, myOject, {
+                    model_type: "Directory"
+                  });
+                  tmp.push(newObject);
+                  // console.log(myOject);
+                  // success.push(myOject);
+                  if (i == tab.length - 1) {
+                    // console.log(tmp);
+                    var myDirectory = new File("Files: " + nameRevit, tmp, {
+                      model_type: "Directory"
+                    });
+                    success.push(myDirectory);
+                    this.myDirectory = myDirectory;
+                  }
+                });
+              }
+            }
+          });
+        }
+      );
+    },
+    //////////////////////////////////////////////////////
+    //                Moove in directory
+    //////////////////////////////////////////////////////
+    clickPath: function(directoryFiles) {
+      var type = directoryFiles._info.model_type.get();
+      this.selected = [];
+      console.log(type);
+
+      if (type == "Directory") {
+        // console.log(directoryFiles);
+        directoryFiles._ptr.load(enterDirectory => {
+          // console.log(enterDirectory);
+          if (this.myBind != undefined) {
+            this.inDirectory.unbind(this.myBind);
+            this.myBind = undefined;
+          }
+          this.inDirectory = enterDirectory;
+          this.myBind = this.inDirectory.bind(this.onModelChange);
+          var obj = {};
+          console.log(this.inDirectory);
+          obj.name = directoryFiles.name.get() + " /";
+          obj.path = this.inDirectory;
+          this.pathTab.push(obj);
+          event.$emit("getCurrentDirectory", this.inDirectory);
+        });
+
+        // this.inDirectory;
+        // var name = "/   " + driveFiles.name.get();
+        // var mypath = this.currentPath + "/" + driveFiles.name.get();
+        // var route2 = {};
+        // route2.name = name;
+        // route2.path = mypath;
+        // this.pathTab.push(route2);
+        // this.currentPath = mypath;
+        // this.getPath();
       }
     },
-    onModelChange: function() {
-      this.tabDisplay = [];
-      console.log("onModelChange comments");
-      console.log(this.currentPanel.selectedObject);
-      this.app
-        .getAssociatedElementsByNodeByRelationType(
-          this.currentPanel.selectedObject,
-          "file"
-        )
-        .then(tabofAllFile => {
-          this.tabDisplay = tabofAllFile;
-          console.log(this.tabDisplay);
-        });
-      // if (this.currentPanel.selectedObject.relations) {
-      //   if (this.currentPanel.selectedObject.relations["files" + "-"]) {
-      //     for (
-      //       let i = 0;
-      //       i <
-      //       this.currentPanel.selectedObject.relations["files" + "-"].length;
-      //       i++
-      //     ) {
-      //       const relMess = this.currentPanel.selectedObject.relations[
-      //         "files" + "-"
-      //       ][i];
-      //       console.log(relMess);
-      //       for (let j = 0; j < relMess.nodeList2.length; j++) {
-      //         const message = relMess.nodeList2[j];
-      //         message.element.load(messObj => {
-      //           console.log(messObj);
-      //           this.tabDisplay.push(messObj);
-      //         });
-      //       }
-      //     }
-      //   }
-      // }
-      // console.log("tabDisplay");
-      // console.log(this.tabDisplay);
-      // return tab;
-    },
-    file: function(button) {
-      console.log("file");
-      // console.log(button);
-      // console.log(this.currentPanel.selectedObject);
-      spinal.eventBus.$emit("openFilePanel", this.newNode);
-      // event.$emit("openResumePanel", this.data.dbIdArray[0], 2);
+    goToPath: function(indexPathTab) {
+      console.log(indexPathTab);
+      var currentPath = this.pathTab[indexPathTab];
+      console.log(currentPath);
+      if (this.myBind != undefined) {
+        this.inDirectory.unbind(this.myBind);
+        this.myBind = undefined;
+      }
+      this.inDirectory = currentPath.path;
+      this.myBind = this.inDirectory.bind(this.onModelChange);
+      // this.pathTab.splice(indexPathTab, this.pathTab.length);
+      this.pathTab.splice(
+        indexPathTab + 1,
+        this.pathTab.length - (indexPathTab + 1)
+      );
+      event.$emit("getCurrentDirectory", this.inDirectory);
+
+      this.onModelChange();
     }
   },
   mounted() {
     viewer = window.spinal.ForgeViewer.viewer;
     spinalSystem = window.spinal.spinalSystem;
-    spinal.circularMenu.addButton(this.file, "folder");
-    console.log(this.inspector);
+    this.currentPanel.selectedObject = this.myNodeProps;
     let interval = setInterval(() => {
       if (typeof spinal.contextStudio.graph != "undefined") {
-        console.log("CREATION OF APP FILE");
-        spinal.contextStudio.graph.getApp("file", ["file"]).then(myApp => {
+        spinal.contextStudio.graph.getApp("file", ["Files"]).then(myApp => {
           this.app = myApp;
-          this.files = this.app.getCharacteristicElement();
+          // console.log(this.app);
         });
-        console.log(this.app);
         clearInterval(interval);
       }
-    }, 2000);
-    // spinalSystem.getModel().then(forgeFile => {
-    //   if (forgeFile) {
-    //     if (forgeFile.apps) {
-    //       if (forgeFile.apps.files) {
-    //         forgeFile.apps.files.load(files => {
-    //           this.files = files;
-    //         });
-    //       } else {
-    //         var list = new Lst();
-    //         forgeFile.apps.add_attr({
-    //           files: new Ptr(list)
-    //         });
-    //         forgeFile.apps.files.load(files => {
-    //           this.files = files;
-    //         });
-    //       }
-    //     }
-    //   }
-    // });
+      // var user = spinalSystem.getUser();
+      // var home = "/__users__/" + user.username;
+      // this.currentPath = home;
+    }, 100);
+
     this.getEvent();
+  },
+  beforeDestroy() {
+    this.inDirectory.unbind(this.myBind);
+    console.log(this.myBind);
+    this.myBind = undefined;
   }
 };
 </script>

@@ -15,11 +15,13 @@ import commentsPanel from "./apps/commentsPanel.vue";
 import filesPanel from "./apps/filePanel.vue";
 import linkPanel from "./apps/linkPanel.vue";
 import drivePanel from "./apps/drivePanel.vue";
+import collaborator from "./apps/collaborator.vue";
 
 const commentsComponentCtor = Vue.extend(commentsPanel);
 const filesComponentCtor = Vue.extend(filesPanel);
 const linkComponentCtor = Vue.extend(linkPanel);
 const driveComponentCtor = Vue.extend(drivePanel);
+const collaboratorComponentCtor = Vue.extend(collaborator);
 
 export default {
   name: "appsManager",
@@ -54,6 +56,7 @@ export default {
     var check2 = false;
     var check3 = false;
     var check4 = false;
+    var check5 = false;
 
     for (let i = 0; i < this.tabPanel.length; i++) {
       if (this.tabPanel[i].titleLabel.indexOf("comments :") > -1) {
@@ -64,6 +67,8 @@ export default {
         check3 = true;
       } else if (this.tabPanel[i].titleLabel.indexOf("drive :") > -1)
         check4 = true;
+      else if (this.tabPanel[i].titleLabel.indexOf("collaborator :") > -1)
+        check5 = true;
     }
 
     if (!check1) {
@@ -85,8 +90,67 @@ export default {
       this.tabPanel.push(hideOrShow);
       window.spinal.panelManager.registerPanel(hideOrShow, "collaborator");
     }
-    if (!check2) {
-      let hideOrShow = new PanelClass(viewer, "files :");
+    // if (!check2) {
+    //   let hideOrShow = new PanelClass(viewer, "files :");
+    //   var _container = document.createElement("div");
+    //   _container.className = hideOrShow.container.id + "-pannelcontainer";
+    //   _container.style.height = "300px";
+    //   _container.style.overflowY = "auto";
+
+    //   hideOrShow.container.style.minWidth = "300px";
+    //   hideOrShow.container.style.width = "350px";
+    //   hideOrShow.container.style.height = "300px";
+    //   hideOrShow.container.style.minHeight = "200px";
+
+    //   hideOrShow.container.style.left = "40%";
+    //   hideOrShow.container.appendChild(_container);
+    //   new filesComponentCtor().$mount(_container);
+    //   event.$emit("createFilesPanel", hideOrShow);
+    //   this.tabPanel.push(hideOrShow);
+    //   window.spinal.panelManager.registerPanel(hideOrShow, "collaborator");
+    // }
+    // if (!check3) {
+    //   let hideOrShow = new PanelClass(viewer, "link :");
+    //   var _container = document.createElement("div");
+    //   _container.className = hideOrShow.container.id + "-pannelcontainer";
+    //   _container.style.height = "300px";
+    //   _container.style.overflowY = "auto";
+
+    //   hideOrShow.container.style.minWidth = "300px";
+    //   hideOrShow.container.style.width = "350px";
+    //   hideOrShow.container.style.height = "300px";
+    //   hideOrShow.container.style.minHeight = "200px";
+
+    //   hideOrShow.container.style.left = "40%";
+    //   hideOrShow.container.appendChild(_container);
+    //   new linkComponentCtor().$mount(_container);
+    //   event.$emit("createLinkPanel", hideOrShow);
+    //   this.tabPanel.push(hideOrShow);
+
+    //   window.spinal.panelManager.registerPanel(hideOrShow, "collaborator");
+    // }
+
+    // if (!check4) {
+    //   let hideOrShow = new PanelClass(viewer, "drive :");
+    //   var _container = document.createElement("div");
+    //   _container.className = hideOrShow.container.id + "-pannelcontainer";
+    //   _container.style.height = "300px";
+    //   _container.style.overflowY = "auto";
+
+    //   hideOrShow.container.style.minWidth = "300px";
+    //   hideOrShow.container.style.width = "350px";
+    //   hideOrShow.container.style.height = "300px";
+
+    //   hideOrShow.container.style.left = "40%";
+    //   hideOrShow.container.appendChild(_container);
+    //   new driveComponentCtor().$mount(_container);
+    //   event.$emit("createDrivePanel", hideOrShow);
+    //   this.tabPanel.push(hideOrShow);
+
+    //   window.spinal.panelManager.registerPanel(hideOrShow, "collaborator");
+    // }
+    if (!check5) {
+      let hideOrShow = new PanelClass(viewer, "collaborator :");
       var _container = document.createElement("div");
       _container.className = hideOrShow.container.id + "-pannelcontainer";
       _container.style.height = "300px";
@@ -95,51 +159,11 @@ export default {
       hideOrShow.container.style.minWidth = "300px";
       hideOrShow.container.style.width = "350px";
       hideOrShow.container.style.height = "300px";
-      hideOrShow.container.style.minHeight = "200px";
 
       hideOrShow.container.style.left = "40%";
       hideOrShow.container.appendChild(_container);
-      new filesComponentCtor().$mount(_container);
-      event.$emit("createFilesPanel", hideOrShow);
-      this.tabPanel.push(hideOrShow);
-      window.spinal.panelManager.registerPanel(hideOrShow, "collaborator");
-    }
-    if (!check3) {
-      let hideOrShow = new PanelClass(viewer, "link :");
-      var _container = document.createElement("div");
-      _container.className = hideOrShow.container.id + "-pannelcontainer";
-      _container.style.height = "300px";
-      _container.style.overflowY = "auto";
-
-      hideOrShow.container.style.minWidth = "300px";
-      hideOrShow.container.style.width = "350px";
-      hideOrShow.container.style.height = "300px";
-      hideOrShow.container.style.minHeight = "200px";
-
-      hideOrShow.container.style.left = "40%";
-      hideOrShow.container.appendChild(_container);
-      new linkComponentCtor().$mount(_container);
-      event.$emit("createLinkPanel", hideOrShow);
-      this.tabPanel.push(hideOrShow);
-
-      window.spinal.panelManager.registerPanel(hideOrShow, "collaborator");
-    }
-
-    if (!check4) {
-      let hideOrShow = new PanelClass(viewer, "drive :");
-      var _container = document.createElement("div");
-      _container.className = hideOrShow.container.id + "-pannelcontainer";
-      _container.style.height = "300px";
-      _container.style.overflowY = "auto";
-
-      hideOrShow.container.style.minWidth = "300px";
-      hideOrShow.container.style.width = "350px";
-      hideOrShow.container.style.height = "300px";
-
-      hideOrShow.container.style.left = "40%";
-      hideOrShow.container.appendChild(_container);
-      new driveComponentCtor().$mount(_container);
-      event.$emit("createDrivePanel", hideOrShow);
+      new collaboratorComponentCtor().$mount(_container);
+      event.$emit("createCollaboratorPanel", hideOrShow);
       this.tabPanel.push(hideOrShow);
 
       window.spinal.panelManager.registerPanel(hideOrShow, "collaborator");
