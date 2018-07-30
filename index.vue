@@ -45,18 +45,18 @@ const classExtention = class {
   // This function is to create your button on viewer, it used autodesk forge api
   createUI() {
     this.panel = new PanelClass(this.viewer, PanelTitle);
-    var button1 = new Autodesk.Viewing.UI.Button(ButtonLabel);
-    button1.onClick = e => {
-      if (!this.panel.isVisible()) {
-        this.panel.setVisible(true);
-      } else {
-        this.panel.setVisible(false);
-      }
-    };
-    var icon = button1.container.firstChild;
-    icon.className = "adsk-button-icon md-icon md-icon-font md-theme-default";
-    icon.innerHTML = ButtonIcon;
-    button1.setToolTip(ButtonLabel);
+    // var button1 = new Autodesk.Viewing.UI.Button(ButtonLabel);
+    // button1.onClick = e => {
+    //   if (!this.panel.isVisible()) {
+    //     this.panel.setVisible(true);
+    //   } else {
+    //     this.panel.setVisible(false);
+    //   }
+    // };
+    // var icon = button1.container.firstChild;
+    // icon.className = "adsk-button-icon md-icon md-icon-font md-theme-default";
+    // icon.innerHTML = ButtonIcon;
+    // button1.setToolTip(ButtonLabel);
 
     this.subToolbar = this.viewer.toolbar.getControl("spinalcom");
     this.subToolbar.addClass("spinalColorButton");
@@ -64,7 +64,7 @@ const classExtention = class {
       this.subToolbar = new Autodesk.Viewing.UI.ControlGroup("spinalcom");
       this.viewer.toolbar.addControl(this.subToolbar);
     }
-    this.subToolbar.addControl(button1);
+    // this.subToolbar.addControl(button1);
     this.initialize();
   }
 
