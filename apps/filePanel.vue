@@ -68,6 +68,7 @@ export default {
         console.log("BIND EVENT");
         this.inDirectory = Directory;
         this.pathTab[0].path = this.inDirectory;
+        console.log("BIND 3");
         this.myBind = this.inDirectory.bind(this.onModelChange);
       });
       spinal.eventBus.$on("getNodeClick", node => {
@@ -75,6 +76,7 @@ export default {
         this.onModelChange();
 
         if (this.myBind != undefined) {
+          console.log("UNBIND 4");
           this.inDirectory.unbind(this.myBind);
           this.myBind = undefined;
         }
@@ -100,9 +102,12 @@ export default {
                 // console.log(this.inDirectory);
                 if (this.inDirectory.length != 0)
                   this.myBind = this.inDirectory.bind(this.onModelChange);
+                console.log("BIND 4");
               } else {
                 if (this.myBind != undefined) {
                   this.inDirectory.unbind(this.myBind);
+                  console.log("UNBIND 5");
+
                   this.myBind = undefined;
                 }
                 this.inDirectory = [];
@@ -178,6 +183,33 @@ export default {
           // callback success
           console.log("callback success");
           console.log(res);
+
+          var BIMObjectName;
+          var tab = this.app.getRelationsByType("Files");
+
+          for (let i = 0; i < tab.length; i++) {
+            const relation = tab[i];
+            let myCheck = false;
+            relation.nodeList1[0].element.load(BIMObjectNode => {
+              BIMObjectName = BIMObjectNode.name.get();
+              for (let j = 0; j < res.length; j++) {
+                const driveFile = res[j];
+                if (driveFile.name.get() == BIMObjectName) {
+                  myCheck = true;
+                }
+              }
+              if (myCheck === false) {
+                // l'element n'est pas dans le drive
+                relation.nodeList2[0].element.load(file => {
+                  // console.log(myDirectory);
+                  var newObject = new File(BIMObjectName, file, {
+                    model_type: "Directory"
+                  });
+                  res.push(newObject);
+                });
+              }
+            });
+          }
         },
         () => {
           // callback error
@@ -237,13 +269,14 @@ export default {
         directoryFiles._ptr.load(enterDirectory => {
           // console.log(enterDirectory);
           if (this.myBind != undefined) {
+            console.log("UNBIND 1");
             this.inDirectory.unbind(this.myBind);
             this.myBind = undefined;
           }
           this.inDirectory = enterDirectory;
+          console.log("BIND 1");
           this.myBind = this.inDirectory.bind(this.onModelChange);
           var obj = {};
-          console.log(this.inDirectory);
           obj.name = directoryFiles.name.get() + " /";
           obj.path = this.inDirectory;
           this.pathTab.push(obj);
@@ -266,10 +299,13 @@ export default {
       var currentPath = this.pathTab[indexPathTab];
       console.log(currentPath);
       if (this.myBind != undefined) {
+        console.log("UNBIND 2");
         this.inDirectory.unbind(this.myBind);
         this.myBind = undefined;
       }
       this.inDirectory = currentPath.path;
+      console.log("BIND 2");
+
       this.myBind = this.inDirectory.bind(this.onModelChange);
       // this.pathTab.splice(indexPathTab, this.pathTab.length);
       this.pathTab.splice(
@@ -301,6 +337,7 @@ export default {
     this.getEvent();
   },
   beforeDestroy() {
+    console.log("UNBIND 3");
     this.inDirectory.unbind(this.myBind);
     console.log(this.myBind);
     this.myBind = undefined;
