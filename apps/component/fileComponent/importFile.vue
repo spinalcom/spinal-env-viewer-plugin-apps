@@ -154,18 +154,20 @@ export default {
                   "il faut checker les directory parent pour eviter une inclusion circulaire"
                 );
                 console.log(element);
-                console.log(
-                  this.arrivedPathTab[this.arrivedPathTab.length - 1]
-                );
-                this.checkChildDirectory(
-                  element,
-                  this.arrivedPathTab[this.arrivedPathTab.length - 1].path
-                ).then(bool => {
-                  let existingDirectoryBool = bool;
-                  console.log(existingDirectoryBool);
-                  if (existingDirectoryBool)
-                    this.selectedDirectory.push(element);
-                  else this.importDirectoryBool = true;
+                this.promiseLoadForgeDirectory().then(blockThisDirectory => {
+                  console.log("WAZZZZZZZA");
+                  console.log(blockThisDirectory);
+                  this.checkChildDirectory(
+                    element,
+                    this.arrivedPathTab[this.arrivedPathTab.length - 1].path,
+                    blockThisDirectory
+                  ).then(bool => {
+                    let existingDirectoryBool = bool;
+                    console.log(existingDirectoryBool);
+                    if (existingDirectoryBool)
+                      this.selectedDirectory.push(element);
+                    else this.importDirectoryBool = true;
+                  });
                 });
                 // console.log(existingDirectoryBool);
                 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -186,23 +188,54 @@ export default {
 
       this.activeTabs = false;
     },
+    promiseLoadForgeDirectory() {
+      return new Promise((resolve, reject) => {
+        var data = spinalSystem.getPath();
+
+        var char = "";
+        var i = data.length;
+        while (char != "/") {
+          char = data[i];
+          i--;
+        }
+
+        // console.log(nameRevit);
+        data = data.slice(0, i + 1);
+        this.result = data;
+        spinalSystem.load(this.result).then(resolve);
+      });
+    },
     promiseLoad(ptr) {
       return new Promise((resolve, reject) => {
         ptr.load(resolve);
       });
     },
-    checkChildDirectory: async function(file, comparedDirectory) {
+    checkChildDirectory: async function(
+      file,
+      comparedDirectory,
+      blockThisDirectory
+    ) {
       let tmpDirectory = await this.promiseLoad(file._ptr);
       console.log(tmpDirectory._server_id, comparedDirectory._server_id);
-      if (tmpDirectory._server_id == comparedDirectory._server_id) {
+      if (
+        tmpDirectory._server_id == comparedDirectory._server_id ||
+        tmpDirectory._server_id == blockThisDirectory._server_id
+      ) {
         console.log("WAZZA ON A TROUVER LE MEME FICHIER BOOM FALSE");
+        console.log(this.arrivedPathTab);
         return false;
       } else {
         let res = [];
         for (let i = 0; i < tmpDirectory.length; i++) {
           const childFile = tmpDirectory[i];
           if (childFile._info.model_type.get() == "Directory")
-            res.push(this.checkChildDirectory(childFile, comparedDirectory));
+            res.push(
+              this.checkChildDirectory(
+                childFile,
+                comparedDirectory,
+                blockThisDirectory
+              )
+            );
         }
         return Promise.all(res).then(arr => {
           console.log(arr);
