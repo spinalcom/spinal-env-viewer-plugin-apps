@@ -4,7 +4,7 @@
       <md-file ref="fileupload" @md-change="createFile" v-model="multiple" multiple  />
     </md-field> -->
     <md-toolbar  layout="row" layout-align="center center" style="box-sizing: border-box;">
-    <import-file :app="app" :selectedObject="currentPanel.selectedObject"></import-file>
+    <import-file :arrivedPathTab="pathTab" :app="app" :selectedObject="currentPanel.selectedObject"></import-file>
     <md-button style="box-sizing: border-box;width: calc(49% - 16px); float: left" @click="exportDrive">Export Drive</md-button>      
     </md-toolbar>
 
@@ -81,7 +81,7 @@ export default {
           this.myBind = undefined;
         }
         if (this.myBind == undefined) {
-          console.log(this.currentPanel.selectedObject);
+          // console.log(this.currentPanel.selectedObject);
           this.app
             .getAssociatedElementsByNodeByRelationType(
               this.currentPanel.selectedObject,
@@ -89,12 +89,12 @@ export default {
             )
             .then(tabofAllFile => {
               this.pathTab = [];
-              console.log(tabofAllFile);
+              // console.log(tabofAllFile);
               if (tabofAllFile[0] != undefined) {
                 this.inDirectory = tabofAllFile[0];
                 event.$emit("getCurrentDirectory", this.inDirectory);
                 var obj = {};
-                console.log(this.inDirectory);
+                // console.log(this.inDirectory);
                 obj.name = "home /";
                 obj.path = this.inDirectory;
                 this.pathTab.push(obj);
@@ -112,7 +112,7 @@ export default {
                 }
                 this.inDirectory = [];
                 var obj = {};
-                console.log(this.inDirectory);
+                // console.log(this.inDirectory);
                 obj.name = "home /";
                 obj.path = this.inDirectory;
                 this.pathTab.push(obj);
@@ -121,13 +121,14 @@ export default {
               // this.onModelChange();
             });
         }
-        console.log(this.currentPanel.selectedObject);
+        // console.log(this.currentPanel.selectedObject);
       });
     },
 
     onModelChange: function() {
-      if (this.tabDisplay.length > 0)
-        this.tabDisplay.splice(0, this.tabDisplay.length);
+      this.tabDisplay = [];
+      // if (this.tabDisplay.length > 0)
+      //   this.tabDisplay.splice(0, this.tabDisplay.length);
       console.log("ON MODEL CHANGE");
       console.log(this.inDirectory);
       if (this.currentPanel.selectedObject != undefined) {
@@ -305,7 +306,6 @@ export default {
       }
       this.inDirectory = currentPath.path;
       console.log("BIND 2");
-
       this.myBind = this.inDirectory.bind(this.onModelChange);
       // this.pathTab.splice(indexPathTab, this.pathTab.length);
       this.pathTab.splice(

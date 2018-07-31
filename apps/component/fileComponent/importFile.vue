@@ -2,7 +2,10 @@
 <div style="box-sizing: border-box; width: calc(49% - 16px)">
     
       <md-button style="box-sizing: border-box;width: calc(100%)" @click="activeTabs = true">Import File</md-button>      
-  
+      <md-dialog-alert
+      :md-active.sync="importDirectoryBool"
+      md-content="You try to insert a circular directory, import is not possible"/>
+
       <md-dialog :md-active.sync="activeTabs">
 
       <md-tabs md-dynamic-height md-alignment="fixed">
@@ -43,15 +46,21 @@ export default {
       activeTabs: false,
       multipleFile: [],
       multipleFileTmp: [],
-      selectedDirectory: undefined
+      selectedDirectory: undefined,
+      pathTab: undefined,
+      importDirectoryBool: false
     };
   },
   components: { drive },
-  props: ["app", "selectedObject"],
+  props: ["app", "selectedObject", "arrivedPathTab"],
   methods: {
     getEvent: function() {
-      event.$on("getSelectionDrive", fileList => {
+      event.$on("getSelectionDrive", (fileList, pathTab) => {
+        this.pathTab = pathTab;
+        // console.log(pathTab);
         // console.log(fileList);
+        // console.log("path d'arrivé");
+        // console.log(this.arrivedPathTab);
         this.multipleFileTmp = fileList;
       });
 
@@ -83,8 +92,6 @@ export default {
     },
     saveFile: function() {
       // LES DERNIERE MODIFICATION SE PASSE A CE NIVEAU LA
-      // console.log(this.selectedDirectory);
-      // console.log(this.selectedObject);
 
       this.app
         .getAssociatedElementsByNodeByRelationType(
@@ -92,7 +99,7 @@ export default {
           "Files-"
         )
         .then(tabofAllFile => {
-          console.log(tabofAllFile);
+          // console.log(tabofAllFile);
           if (tabofAllFile.length == 0) {
             this.app
               .getAssociatedElementsByNodeByRelationType(
@@ -100,7 +107,7 @@ export default {
                 "Files"
               )
               .then(tabofAllFile => {
-                console.log(tabofAllFile);
+                // console.log(tabofAllFile);
                 // console.log(tabofAllFile.length);
                 if (tabofAllFile.length == 0) {
                   var tmp = new Directory("Files");
@@ -108,7 +115,20 @@ export default {
                   if (this.multipleFileTmp.length > 0) {
                     for (let i = 0; i < this.multipleFileTmp.length; i++) {
                       const element = this.multipleFileTmp[i];
-                      this.selectedDirectory.push(element);
+                      console.log(
+                        "il faut checker les directory parent pour eviter une inclusion circulaire"
+                      );
+                      console.log(element);
+                      this.checkChildDirectory(
+                        element,
+                        this.arrivedPathTab[this.arrivedPathTab.length - 1].path
+                      ).then(bool => {
+                        let existingDirectoryBool = bool;
+                        console.log(existingDirectoryBool);
+                        if (existingDirectoryBool)
+                          this.selectedDirectory.push(element);
+                        else this.importDirectoryBool = true;
+                      });
                     }
                   }
                   // console.log(myDirectory);
@@ -128,13 +148,71 @@ export default {
             if (this.multipleFileTmp.length > 0) {
               for (let i = 0; i < this.multipleFileTmp.length; i++) {
                 const element = this.multipleFileTmp[i];
-                this.selectedDirectory.push(element);
+                // il faut checker les directory parent pour eviter une inclusion circulaire
+                // console.log(element);
+                console.log(
+                  "il faut checker les directory parent pour eviter une inclusion circulaire"
+                );
+                console.log(element);
+                console.log(
+                  this.arrivedPathTab[this.arrivedPathTab.length - 1]
+                );
+                this.checkChildDirectory(
+                  element,
+                  this.arrivedPathTab[this.arrivedPathTab.length - 1].path
+                ).then(bool => {
+                  let existingDirectoryBool = bool;
+                  console.log(existingDirectoryBool);
+                  if (existingDirectoryBool)
+                    this.selectedDirectory.push(element);
+                  else this.importDirectoryBool = true;
+                });
+                // console.log(existingDirectoryBool);
+                ///////////////////////////////////////////////////////////////////////////////////////////////////
+                // for (let j = 0; j < this.arrivedPathTab.length; j++) {
+                //   let arrivedPath = this.arrivedPathTab[j];
+                //   // arrivedPath = arrivedPath.splice(
+                //   //   arrivedPath.length - 2,
+                //   //   arrivedPath.length
+                //   // );
+                //   console.log(arrivedPath);
+                // }
+                //////////////////////////////////////////////////////////////////////////////////////////////////:
+                // this.selectedDirectory.push(element);
               }
             }
           }
         });
 
       this.activeTabs = false;
+    },
+    promiseLoad(ptr) {
+      return new Promise((resolve, reject) => {
+        ptr.load(resolve);
+      });
+    },
+    checkChildDirectory: async function(file, comparedDirectory) {
+      let tmpDirectory = await this.promiseLoad(file._ptr);
+      console.log(tmpDirectory._server_id, comparedDirectory._server_id);
+      if (tmpDirectory._server_id == comparedDirectory._server_id) {
+        console.log("WAZZA ON A TROUVER LE MEME FICHIER BOOM FALSE");
+        return false;
+      } else {
+        let res = [];
+        for (let i = 0; i < tmpDirectory.length; i++) {
+          const childFile = tmpDirectory[i];
+          if (childFile._info.model_type.get() == "Directory")
+            res.push(this.checkChildDirectory(childFile, comparedDirectory));
+        }
+        return Promise.all(res).then(arr => {
+          console.log(arr);
+          for (let index = 0; index < arr.length; index++) {
+            const element = arr[index];
+            if (element === false) return false;
+          }
+          return true;
+        });
+      }
     },
     getPath: function() {
       // il faut que je mettre la route dans mounted, je push dans la list de path et

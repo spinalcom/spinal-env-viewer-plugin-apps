@@ -42,7 +42,7 @@ export default {
     onSelect: function(items) {
       this.selected = items;
       // console.log(this.selected);
-      event.$emit("getSelectionDrive", this.selected);
+      event.$emit("getSelectionDrive", this.selected, this.pathTab);
     },
     clickPath: function(driveFiles) {
       var type = driveFiles._info.model_type.get();
@@ -50,7 +50,7 @@ export default {
       // console.log(type);
 
       if (type == "Directory") {
-        var name = "/   " + driveFiles.name.get();
+        var name = "/ " + driveFiles.name.get();
         var mypath = this.currentPath + "/" + driveFiles.name.get();
         var route2 = {};
         route2.name = name;
@@ -101,7 +101,7 @@ export default {
     var home = "/__users__/" + user.username;
     this.currentPath = home;
     var route = {};
-    route.name = "home  ";
+    route.name = "home";
     route.path = home;
     this.pathTab.push(route);
     this.getPath();
