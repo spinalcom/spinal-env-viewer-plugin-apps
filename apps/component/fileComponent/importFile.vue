@@ -118,17 +118,24 @@ export default {
                       console.log(
                         "il faut checker les directory parent pour eviter une inclusion circulaire"
                       );
-                      console.log(element);
-                      this.checkChildDirectory(
-                        element,
-                        this.arrivedPathTab[this.arrivedPathTab.length - 1].path
-                      ).then(bool => {
-                        let existingDirectoryBool = bool;
-                        console.log(existingDirectoryBool);
-                        if (existingDirectoryBool)
-                          this.selectedDirectory.push(element);
-                        else this.importDirectoryBool = true;
-                      });
+                      this.promiseLoadForgeDirectory().then(
+                        blockThisDirectory => {
+                          console.log("WAZZZZZZZA");
+                          console.log(blockThisDirectory);
+                          this.checkChildDirectory(
+                            element,
+                            this.arrivedPathTab[this.arrivedPathTab.length - 1]
+                              .path,
+                            blockThisDirectory
+                          ).then(bool => {
+                            let existingDirectoryBool = bool;
+                            console.log(existingDirectoryBool);
+                            if (existingDirectoryBool)
+                              this.selectedDirectory.push(element);
+                            else this.importDirectoryBool = true;
+                          });
+                        }
+                      );
                     }
                   }
                   // console.log(myDirectory);
