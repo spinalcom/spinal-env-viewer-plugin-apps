@@ -223,6 +223,7 @@ export default {
     spinalSystem = window.spinal.spinalSystem;
     // console.log(this.inspector);
     this.currentPanel.selectedObject = this.myNodeProps;
+    console.log("MOUNTED");
     console.log("LINK PANEL");
     // console.log(window.spinal.contextStudio);
     let interval = setInterval(() => {

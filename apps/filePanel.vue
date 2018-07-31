@@ -321,11 +321,53 @@ export default {
     viewer = window.spinal.ForgeViewer.viewer;
     spinalSystem = window.spinal.spinalSystem;
     this.currentPanel.selectedObject = this.myNodeProps;
+
+    console.log("MOUNTED");
     let interval = setInterval(() => {
       if (typeof spinal.contextStudio.graph != "undefined") {
         spinal.contextStudio.graph.getApp("file", ["Files"]).then(myApp => {
           this.app = myApp;
           // console.log(this.app);
+          if (this.currentPanel.selectedObject != undefined) {
+            this.app
+              .getAssociatedElementsByNodeByRelationType(
+                this.currentPanel.selectedObject,
+                "Files-"
+              )
+              .then(tabofAllFile => {
+                this.pathTab = [];
+                // console.log(tabofAllFile);
+                if (tabofAllFile[0] != undefined) {
+                  this.inDirectory = tabofAllFile[0];
+                  event.$emit("getCurrentDirectory", this.inDirectory);
+                  var obj = {};
+                  // console.log(this.inDirectory);
+                  obj.name = "home /";
+                  obj.path = this.inDirectory;
+                  this.pathTab.push(obj);
+
+                  // console.log(this.inDirectory);
+                  if (this.inDirectory.length != 0)
+                    this.myBind = this.inDirectory.bind(this.onModelChange);
+                  console.log("BIND 4");
+                } else {
+                  if (this.myBind != undefined) {
+                    this.inDirectory.unbind(this.myBind);
+                    console.log("UNBIND 5");
+
+                    this.myBind = undefined;
+                  }
+                  this.inDirectory = [];
+                  var obj = {};
+                  // console.log(this.inDirectory);
+                  obj.name = "home /";
+                  obj.path = this.inDirectory;
+                  this.pathTab.push(obj);
+                  this.onModelChange();
+                }
+                // this.onModelChange();
+              });
+          }
         });
         clearInterval(interval);
       }
@@ -335,13 +377,13 @@ export default {
     }, 100);
 
     this.getEvent();
-  },
-  beforeDestroy() {
-    console.log("UNBIND 3");
-    this.inDirectory.unbind(this.myBind);
-    console.log(this.myBind);
-    this.myBind = undefined;
   }
+  // beforeDestroy() {
+  //   console.log("UNBIND 3");
+  //   this.inDirectory.unbind(this.myBind);
+  //   console.log(this.myBind);
+  //   this.myBind = undefined;
+  // }
 };
 </script>
 
