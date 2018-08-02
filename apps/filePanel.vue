@@ -18,7 +18,7 @@
         <md-table-row @dblclick.native="clickPath(files)" v-for="(files, index) in tabDisplay" :key="index">
         <md-table-cell><md-icon>{{getIconFile(files)}}</md-icon></md-table-cell>          
           <md-table-cell md-numeric>{{files.name.get()}}</md-table-cell>
-          <md-table-cell>{{ files.name.get() }}</md-table-cell>
+          <md-table-cell md-numeric>{{files._info.model_type.get()}}</md-table-cell>
           <md-table-cell><context-menu-file-panel :selectedObject="currentPanel.selectedObject" :file="files"></context-menu-file-panel></md-table-cell>
         </md-table-row>
       </md-table>

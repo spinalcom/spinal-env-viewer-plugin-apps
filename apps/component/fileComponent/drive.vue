@@ -7,6 +7,7 @@
       <md-table-row  @dblclick.native="clickPath(driveFiles)" slot="md-table-row" slot-scope="{ item:driveFiles }" md-auto-select md-selectable="multiple">
         <md-table-cell><md-icon>{{getIconFile(driveFiles)}}</md-icon></md-table-cell>
         <md-table-cell md-numeric>{{driveFiles.name.get()}}</md-table-cell>
+          <md-table-cell md-numeric>{{driveFiles._info.model_type.get()}}</md-table-cell>
       </md-table-row>
         </md-table>
     <!-- <md-list>
