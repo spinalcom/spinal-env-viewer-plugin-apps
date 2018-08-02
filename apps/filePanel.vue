@@ -13,8 +13,8 @@
     <md-content class=" md-scrollbar" style="box-sizing: border-box; overflow-y:auto; height: calc(100% - 123px)">
       <md-table v-if="tabDisplay.length > 0" style="padding-right: 15px; padding-left: 20px;">
         <md-table-row @dblclick.native="clickPath(files)" v-for="(files, index) in tabDisplay" :key="index">
+        <md-table-cell><md-icon>{{getIconFile(files)}}</md-icon></md-table-cell>          
           <md-table-cell md-numeric>{{files.name.get()}}</md-table-cell>
-          <md-table-cell>{{files._info.model_type.get()}}</md-table-cell>
           <md-table-cell>{{ files.name.get() }}</md-table-cell>
           <md-table-cell><context-menu-file-panel :selectedObject="currentPanel.selectedObject" :file="files"></context-menu-file-panel></md-table-cell>
         </md-table-row>
@@ -315,6 +315,13 @@ export default {
       event.$emit("getCurrentDirectory", this.inDirectory);
 
       this.onModelChange();
+    },
+    getIconFile: function(driveFiles) {
+      var fileType = driveFiles._info.model_type.get();
+      if (fileType === "Directory") return "folder";
+      else if (fileType === "Digital twin") return "location_city";
+      else if (fileType === "Path") return "insert_drive_file";
+      else return "not_listed_location";
     }
   },
   mounted() {

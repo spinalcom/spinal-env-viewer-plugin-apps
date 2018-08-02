@@ -1,8 +1,8 @@
 <template>
   <md-content class="md-scrollbar myTabs" style="box-sizing: border-box; height: calc(100% - 50px)">
     <!-- <transition name="spinalTab"> -->
-      <md-button style="width: 45%" @click="activeTab = 0" class="md-raised">Files</md-button>
-      <md-button style="width: 45%" @click="activeTab = 1" class="md-raised">Links</md-button>
+      <md-button style="width: 45%" @click="activeTab = 0" :style="activeTabColor()" class="md-raised">Files</md-button>
+      <md-button style="width: 45%" @click="activeTab = 1" :style="activeTabColor2()" class="md-raised">Links</md-button>
     <!-- </transition>   -->
 
       <!-- <transition name="spinalTab"> -->
@@ -76,6 +76,14 @@ export default {
       // this.onModelChange();
 
       // event.$emit("openResumePanel", this.data.dbIdArray[0], 2);
+    },
+    activeTabColor: function() {
+      if (this.activeTab == 0) return { background: "#356BaB" };
+      else return { background: "unset" };
+    },
+    activeTabColor2: function() {
+      if (this.activeTab == 1) return { background: "#356BaB" };
+      else return { background: "unset" };
     },
     checkNewPosts: function() {
       console.log(this.currentPanel.selectedObject);
