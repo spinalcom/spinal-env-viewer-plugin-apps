@@ -227,11 +227,28 @@ export default {
     },
     removeMessage: function(comment) {
       // console.log(comment.message.get());
-      for (let i = 0; i < this.currentPanel.selectedObject.note.length; i++) {
-        const element = this.currentPanel.selectedObject.note[i];
-        if (element === comment)
-          this.currentPanel.selectedObject.note.splice(i, 1);
+
+      var test = this.currentPanel.selectedObject.getRelationsByAppNameByType(
+        "comments",
+        "comments"
+      );
+      console.log(test[0]);
+      for (let i = 0; i < test[0].nodeList2.length; i++) {
+        test[0].nodeList2[i].element.load(myComments => {
+          if (myComments === comment)
+            this.currentPanel.selectedObject.removeFromExistingRelationByApp(
+              "comments",
+              "comments",
+              test[0].nodeList2[i]
+            );
+        });
       }
+
+      // for (let i = 0; i < this.currentPanel.selectedObject.note.length; i++) {
+      //   const element = this.currentPanel.selectedObject.note[i];
+      //   if (element === comment)
+      //     this.currentPanel.selectedObject.note.splice(i, 1);
+      // }
     },
     editMessage: function(comment) {
       this.myEditMessage = comment;

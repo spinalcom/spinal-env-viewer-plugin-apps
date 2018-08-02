@@ -4,7 +4,7 @@
       <md-button style="box-sizing: border-box;width: calc(100%)" @click="activeTabs = true">Import File</md-button>      
       <md-dialog-alert
       :md-active.sync="importDirectoryBool"
-      md-content="You try to insert a circular directory, import is not possible"/>
+      md-content="Inserting a circular directory is not allowed"/>
 
       <md-dialog :md-active.sync="activeTabs">
 

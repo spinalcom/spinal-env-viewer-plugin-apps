@@ -9,9 +9,9 @@
             <md-icon>cloud_download</md-icon>download
           </md-menu-item>
 
-          <md-menu-item @click="deleteFile">
+          <!-- <md-menu-item @click="deleteFile">
             <md-icon>delete_forever</md-icon>Delete
-          </md-menu-item>
+          </md-menu-item> -->
           
       </md-menu-content>
 </md-menu>

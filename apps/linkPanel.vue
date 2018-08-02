@@ -31,7 +31,7 @@
           <md-tooltip>{{ links.link.get()}}</md-tooltip>
         </a>
         <!-- add context menu for delete link -->
-        <contextMenuLink :links="links" :selectedObject="tabDisplay"></contextMenuLink>
+        <contextMenuLink :links="links" :selectedObject="currentPanel.selectedObject"></contextMenuLink>
       </md-list-item>
     </md-list>
     </md-content>

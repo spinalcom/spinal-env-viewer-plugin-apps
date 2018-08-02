@@ -3,9 +3,12 @@
     <!-- <md-field>
       <md-file ref="fileupload" @md-change="createFile" v-model="multiple" multiple  />
     </md-field> -->
+    <md-dialog-alert
+      :md-active.sync="ExportDirectoryBool"
+      md-content="Export Done"/>
     <md-toolbar  layout="row" layout-align="center center" style="box-sizing: border-box;">
     <import-file :arrivedPathTab="pathTab" :app="app" :selectedObject="currentPanel.selectedObject"></import-file>
-    <md-button style="box-sizing: border-box;width: calc(49% - 16px); float: left" @click="exportDrive">Export Drive</md-button>      
+    <md-button style="box-sizing: border-box;width: calc(49% - 16px); float: left" @click="exportDrive">Export To Drive</md-button>      
     </md-toolbar>
 
     <span @click="goToPath(index)" v-for="(path,index) in pathTab" :key="index">{{path.name}} </span>
@@ -49,6 +52,7 @@ export default {
       multiple: [],
       files: {},
       pathTab: [],
+      ExportDirectoryBool: false,
       app: undefined,
       tabDisplay: [],
       myBind: undefined,
@@ -256,6 +260,7 @@ export default {
           });
         }
       );
+      this.ExportDirectoryBool = true;
     },
     //////////////////////////////////////////////////////
     //                Moove in directory

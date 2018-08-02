@@ -66,16 +66,22 @@ export default {
       // event.$emit("renameGroup", group);
     },
     deleteLink: function() {
-      console.log(this.file);
+      console.log(this.links);
       console.log(this.selectedObject);
-      for (
-        let i = 0;
-        i < this.selectedObject.relations["files" + "-"].length;
-        i++
-      ) {
-        const element = this.selectedObject.relations["files" + "-"][i];
-        if (this.file === element)
-          this.selectedObject.relations["files" + "-"].splice(i, 1);
+      var test = this.selectedObject.getRelationsByAppNameByType(
+        "link",
+        "link"
+      );
+      console.log(test[0]);
+      for (let i = 0; i < test[0].nodeList2.length; i++) {
+        test[0].nodeList2[i].element.load(myLink => {
+          if (myLink === this.links)
+            this.selectedObject.removeFromExistingRelationByApp(
+              "link",
+              "link",
+              test[0].nodeList2[i]
+            );
+        });
       }
     },
     myConfirm: function() {
