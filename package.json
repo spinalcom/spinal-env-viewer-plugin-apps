@@ -1,5 +1,5 @@
 {
-q  "name": "spinal-env-viewer-plugin-apps",
+  "name": "spinal-env-viewer-plugin-apps",
   "version": "1.0.9",
   "description": "",
   "main": "index.vue",
