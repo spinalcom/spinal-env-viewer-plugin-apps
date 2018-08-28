@@ -13,6 +13,7 @@
     "spinal-models-bim_forge": "https://github.com/spinalcom/spinal-models-bim_forge.git",
     "spinal-models-bim_viewer": "https://github.com/spinalcom/spinal-models-bim_viewer.git",
     "spinal-env-viewer-plugin-circularMenu": "https://github.com/spinalcom/spinal-env-viewer-plugin-circularMenu.git",
+    "spinal-env-viewer-plugin-panel_manager": "https://github.com/spinalcom/spinal-env-viewer-plugin-panel_manager.git",
     "moment": "^2.22.2"
   },
   "devDependencies": {
