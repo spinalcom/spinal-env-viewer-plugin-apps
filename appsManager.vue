@@ -1,6 +1,6 @@
 <template>
   <md-content class="md-scrollbar">
-    test 
+    test
   </md-content>
 </template>
 
@@ -39,18 +39,18 @@ export default {
     viewer = window.spinal.ForgeViewer.viewer;
     spinalSystem = window.spinal.spinalSystem;
 
-    spinalSystem.getModel().then(forgeFile => {
-      if (forgeFile) {
-        if (forgeFile.apps) {
-          this.apps = apps;
-        } else {
-          forgeFile.add_attr({
-            apps: new Model()
-          });
-          this.apps = apps;
-        }
-      }
-    });
+    // spinalSystem.getModel().then(forgeFile => {
+    //   if (forgeFile) {
+    //     if (forgeFile.apps) {
+    //       this.apps = apps;
+    //     } else {
+    //       forgeFile.add_attr({
+    //         apps: new Model()
+    //       });
+    //       this.apps = apps;
+    //     }
+    //   }
+    // });
 
     var check1 = false;
     var check2 = false;

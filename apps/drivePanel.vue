@@ -1,34 +1,45 @@
 <template>
-    <md-content style=" box-sizing: border-box; height: calc(100% - 50px)" class="md-scrollbar">
-      <md-button @click="getPath" class=" slice">
-        {{path}}
-      </md-button>
-        <div style="height: calc(100% - 40px)">
-    <md-table v-model="searched" md-sort="name" md-sort-order="asc" md-fixed-header>
-      <md-table-toolbar style="width: calc(100% - 32px); height: 50px">
-        <div class="md-toolbar-section-start">
-          <h1 class="md-title">File</h1>
-        </div>
+  <md-content style=" box-sizing: border-box; height: calc(100% - 50px)"
+              class="md-scrollbar">
+    <md-button @click="getPath"
+               class=" slice">
+      {{path}}
+    </md-button>
+    <div style="height: calc(100% - 40px)">
+      <md-table v-model="searched"
+                md-sort="name"
+                md-sort-order="asc"
+                md-fixed-header>
+        <md-table-toolbar style="width: calc(100% - 32px); height: 50px">
+          <div class="md-toolbar-section-start">
+            <h1 class="md-title">File</h1>
+          </div>
 
-        <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by name..." v-model="search" @input="searchOnTable" />
-        </md-field>
-      </md-table-toolbar>
+          <md-field md-clearable
+                    class="md-toolbar-section-end">
+            <md-input placeholder="Search by name..."
+                      v-model="search"
+                      @input="searchOnTable" />
+          </md-field>
+        </md-table-toolbar>
 
-      <md-table-empty-state
-        md-label="No users found"
-        :md-description="`No user found for this '${search}' query. Try a different search term or create a new user.`">
-        <md-button class="md-primary md-raised" @click="newFolder">Create New Folder</md-button>
-      </md-table-empty-state>
+        <md-table-empty-state md-label="No users found"
+                              :md-description="`No user found for this '${search}' query. Try a different search term or create a new user.`">
+          <md-button class="md-primary md-raised"
+                     @click="newFolder">Create New Folder</md-button>
+        </md-table-empty-state>
 
-      <md-table-row slot="md-table-row" slot-scope="{ item:test }" @click="open(test)">
-        <md-table-cell md-label="Name" md-numeric>{{ test.name.get() }}</md-table-cell>
-        <md-table-cell md-label="Type" >{{ test._info.model_type.get() }}</md-table-cell>
-        <md-table-cell md-label="Email" >{{ test.name.get() }}</md-table-cell>
-        <md-table-cell md-label="Gender" >{{ test.name.get() }}</md-table-cell>
-      </md-table-row>
-    </md-table>
-  </div>
+        <md-table-row slot="md-table-row"
+                      slot-scope="{ item:test }"
+                      @click="open(test)">
+          <md-table-cell md-label="Name"
+                         md-numeric>{{ test.name.get() }}</md-table-cell>
+          <md-table-cell md-label="Type">{{ test._info.model_type.get() }}</md-table-cell>
+          <md-table-cell md-label="Email">{{ test.name.get() }}</md-table-cell>
+          <md-table-cell md-label="Gender">{{ test.name.get() }}</md-table-cell>
+        </md-table-row>
+      </md-table>
+    </div>
 
   </md-content>
 </template>

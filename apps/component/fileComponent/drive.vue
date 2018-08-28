@@ -1,20 +1,31 @@
 <template>
-<md-content class=" md-scrollbar" style="box-sizing: border-box; overflow-y:auto; height: 57vh">
-      <span @click="goToPath(index)" v-for="(path,index) in pathTab" :key="index">{{path.name}} </span>
-        <md-table v-model="tabDisplay" style="min-height: 50vh; height: 100%; max-height: 100%" @md-selected="onSelect">
+  <md-content class=" md-scrollbar"
+              style="box-sizing: border-box; overflow-y:auto; height: 57vh">
+    <span @click="goToPath(index)"
+          v-for="(path,index) in pathTab"
+          :key="index">{{path.name}} </span>
+    <md-table v-model="tabDisplay"
+              style="min-height: 50vh; height: 100%; max-height: 100%"
+              @md-selected="onSelect">
 
       <!-- <md-table-row  @dblclick.native="clickPath(driveFiles)" v-for="(driveFiles, index) in tabDisplay" :key="index" md-auto-select md-selectable="multiple"> -->
-      <md-table-row  @dblclick.native="clickPath(driveFiles)" slot="md-table-row" slot-scope="{ item:driveFiles }" md-auto-select md-selectable="multiple">
-        <md-table-cell><md-icon>{{getIconFile(driveFiles)}}</md-icon></md-table-cell>
+      <md-table-row @dblclick.native="clickPath(driveFiles)"
+                    slot="md-table-row"
+                    slot-scope="{ item:driveFiles }"
+                    md-auto-select
+                    md-selectable="multiple">
+        <md-table-cell>
+          <md-icon>{{getIconFile(driveFiles)}}</md-icon>
+        </md-table-cell>
         <md-table-cell md-numeric>{{driveFiles.name.get()}}</md-table-cell>
-          <md-table-cell md-numeric>{{driveFiles._info.model_type.get()}}</md-table-cell>
+        <md-table-cell md-numeric>{{driveFiles._info.model_type.get()}}</md-table-cell>
       </md-table-row>
-        </md-table>
+    </md-table>
     <!-- <md-list>
       <md-list-item @click="getPath" v-for="(driveFiles, index) in tabDisplay" :key="index" >{{driveFiles.name.get()}}</md-list-item>
     </md-list> -->
 
-</md-content>
+  </md-content>
 </template>
 
 

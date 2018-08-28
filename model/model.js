@@ -78,6 +78,23 @@ var link = class link extends Model {
 exports.link = link;
 spinalCore.register_models(link);
 
+var attributes = class attributes extends Model {
+  constructor(name = "attributes") {
+    super();
+
+    this.add_attr({
+      name: "",
+      value: "",
+      username: "",
+      owner: "",
+      date: Date.now()
+    });
+  }
+};
+
+exports.attributes = attributes;
+spinalCore.register_models(attributes);
+
 var inspectorTemplate = class inspectorTemplate extends Model {
   constructor() {
     super();

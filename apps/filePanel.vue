@@ -1,30 +1,45 @@
 <template>
-  <md-content class="container-file" style=" box-sizing: border-box; height: calc(100% - 50px)">
+  <md-content class="container-file"
+              style=" box-sizing: border-box; height: calc(100% - 50px)">
     <!-- <md-field>
       <md-file ref="fileupload" @md-change="createFile" v-model="multiple" multiple  />
     </md-field> -->
-    <md-dialog-alert
-      :md-active.sync="ExportDirectoryBool"
-      md-content="Export Done"/>
-    <md-toolbar  layout="row" layout-align="center center" style="box-sizing: border-box;">
-    <import-file :arrivedPathTab="pathTab" :app="app" :selectedObject="currentPanel.selectedObject"></import-file>
-    <md-button style="box-sizing: border-box;width: calc(49% - 16px); float: left" @click="exportDrive">Export To Drive</md-button>      
+    <md-dialog-alert :md-active.sync="ExportDirectoryBool"
+                     md-content="Export Done" />
+    <md-toolbar layout="row"
+                layout-align="center center"
+                style="box-sizing: border-box;">
+      <import-file :arrivedPathTab="pathTab"
+                   :app="app"
+                   :selectedObject="currentPanel.selectedObject"></import-file>
+      <md-button style="box-sizing: border-box;width: calc(49% - 16px); float: left"
+                 @click="exportDrive">Export To Drive</md-button>
     </md-toolbar>
 
-    <span @click="goToPath(index)" v-for="(path,index) in pathTab" :key="index">{{path.name}} </span>
+    <span @click="goToPath(index)"
+          v-for="(path,index) in pathTab"
+          :key="index">{{path.name}} </span>
 
-    <md-content class=" md-scrollbar" style="box-sizing: border-box; overflow-y:auto; height: calc(100% - 123px)">
-      <md-table v-if="tabDisplay.length > 0" style="padding-right: 15px; padding-left: 20px;">
-        <md-table-row @dblclick.native="clickPath(files)" v-for="(files, index) in tabDisplay" :key="index">
-        <md-table-cell><md-icon>{{getIconFile(files)}}</md-icon></md-table-cell>          
+    <md-content class=" md-scrollbar"
+                style="box-sizing: border-box; overflow-y:auto; height: calc(100% - 123px)">
+      <md-table v-if="tabDisplay.length > 0"
+                style="padding-right: 15px; padding-left: 20px; overflow-x: unset">
+        <md-table-row style="overflow-x: unset"
+                      @dblclick.native="clickPath(files)"
+                      v-for="(files, index) in tabDisplay"
+                      :key="index">
+          <md-table-cell>
+            <md-icon>{{getIconFile(files)}}</md-icon>
+          </md-table-cell>
           <md-table-cell md-numeric>{{files.name.get()}}</md-table-cell>
           <md-table-cell md-numeric>{{files._info.model_type.get()}}</md-table-cell>
-          <md-table-cell><context-menu-file-panel :selectedObject="currentPanel.selectedObject" :file="files"></context-menu-file-panel></md-table-cell>
+          <md-table-cell>
+            <context-menu-file-panel :selectedObject="currentPanel.selectedObject"
+                                     :file="files"></context-menu-file-panel>
+          </md-table-cell>
         </md-table-row>
       </md-table>
     </md-content>
-
-
   </md-content>
 </template>
 
@@ -89,7 +104,7 @@ export default {
           this.app
             .getAssociatedElementsByNodeByRelationType(
               this.currentPanel.selectedObject,
-              "Files-"
+              "hasFiles"
             )
             .then(tabofAllFile => {
               this.pathTab = [];
@@ -190,7 +205,7 @@ export default {
           console.log(res);
 
           var BIMObjectName;
-          var tab = this.app.getRelationsByType("Files");
+          var tab = this.app.getRelationsByType("hasFiles");
 
           for (let i = 0; i < tab.length; i++) {
             const relation = tab[i];
@@ -224,7 +239,7 @@ export default {
             // console.log("create the directory in the drive");
             // console.log(this.app);
 
-            var tab = this.app.getRelationsByType("Files");
+            var tab = this.app.getRelationsByType("hasFiles");
             var tmp = new Directory("Files: " + nameRevit);
             // console.log(tab);
             var BIMObjectName;
@@ -337,14 +352,14 @@ export default {
     console.log("MOUNTED");
     let interval = setInterval(() => {
       if (typeof spinal.contextStudio.graph != "undefined") {
-        spinal.contextStudio.graph.getApp("file", ["Files"]).then(myApp => {
+        spinal.contextStudio.graph.getApp("files", ["hasFiles"]).then(myApp => {
           this.app = myApp;
           // console.log(this.app);
           if (this.currentPanel.selectedObject != undefined) {
             this.app
               .getAssociatedElementsByNodeByRelationType(
                 this.currentPanel.selectedObject,
-                "Files-"
+                "hasFiles-"
               )
               .then(tabofAllFile => {
                 this.pathTab = [];

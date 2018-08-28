@@ -1,14 +1,30 @@
 <template>
-  <md-content class="md-scrollbar myTabs" style="box-sizing: border-box; height: calc(100% - 50px)">
+  <md-content class="md-scrollbar myTabs"
+              style="box-sizing: border-box; height: calc(100% - 50px)">
     <!-- <transition name="spinalTab"> -->
-      <md-button style="width: 45%" @click="activeTab = 0" :style="activeTabColor()" class="md-raised">Files</md-button>
-      <md-button style="width: 45%" @click="activeTab = 1" :style="activeTabColor2()" class="md-raised">Links</md-button>
+    <md-button style="width: calc(33% - 16)"
+               @click="activeTab = 0"
+               :style="activeTabColor()"
+               class="md-raised">Files</md-button>
+    <md-button style="width: calc(33% - 16)"
+               @click="activeTab = 1"
+               :style="activeTabColor2()"
+               class="md-raised">Links</md-button>
+    <md-button style="width: calc(33% - 16)"
+               @click="activeTab = 2"
+               :style="activeTabColor3()"
+               class="md-raised">Attributes</md-button>
+
     <!-- </transition>   -->
 
-      <!-- <transition name="spinalTab"> -->
-        <files-panel v-if="activeTab == 0" :myNodeProps="currentPanel.selectedObject"></files-panel>    
-        <links-panel v-else :myNodeProps="currentPanel.selectedObject"></links-panel>
-      <!-- </transition>   -->
+    <!-- <transition name="spinalTab"> -->
+    <files-panel v-if="activeTab == 0"
+                 :myNodeProps="currentPanel.selectedObject"></files-panel>
+    <links-panel v-else-if="activeTab == 1"
+                 :myNodeProps="currentPanel.selectedObject"></links-panel>
+    <attributes-panel v-else
+                      :my-node-props="currentPanel.selectedObject"></attributes-panel>
+    <!-- </transition>   -->
 
   </md-content>
 </template>
@@ -23,6 +39,7 @@ import event from "../componentGlobal/event.vue";
 import linksPanel from "./linkPanel.vue";
 import filesPanel from "./filePanel.vue";
 import commentsPanel from "./commentsPanel.vue";
+import attributesPanel from "./attributesPanel.vue";
 
 export default {
   name: "appsManager",
@@ -36,7 +53,7 @@ export default {
       activeTab: 0
     };
   },
-  components: { linksPanel, filesPanel, commentsPanel },
+  components: { linksPanel, filesPanel, commentsPanel, attributesPanel },
   props: [],
   methods: {
     getEvent: function() {
@@ -83,6 +100,10 @@ export default {
     },
     activeTabColor2: function() {
       if (this.activeTab == 1) return { background: "#356BaB" };
+      else return { background: "unset" };
+    },
+    activeTabColor3: function() {
+      if (this.activeTab == 2) return { background: "#356BaB" };
       else return { background: "unset" };
     },
     checkNewPosts: function() {

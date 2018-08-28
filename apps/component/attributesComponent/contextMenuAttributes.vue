@@ -11,7 +11,7 @@
           <md-icon>border_color</md-icon>modify
         </md-menu-item>
 
-        <md-menu-item @click="deleteLink">
+        <md-menu-item @click="deleteAttributes">
           <md-icon>delete_forever</md-icon>Delete
         </md-menu-item>
 
@@ -19,17 +19,17 @@
     </md-menu>
     <md-dialog :md-active.sync="active">
 
-      <h4 style="  margin-left: auto; margin-right: auto; width: 40px; margin-bottom: unset">Label</h4>
+      <h4 style="  margin-left: auto; margin-right: auto; width: 40px; margin-bottom: unset">attributes</h4>
       <md-field md-inline
                 style="width: 80%; margin-left: auto; margin-right: auto;">
-        <md-input v-model="nameLabel"></md-input>
+        <md-input v-model="nameAttributes"></md-input>
       </md-field>
 
-      <h4 style="  margin-left: auto; margin-right: auto; width: 40px; margin-top: unset; margin-bottom: unset">Link</h4>
+      <h4 style="  margin-left: auto; margin-right: auto; width: 40px; margin-top: unset; margin-bottom: unset">Value</h4>
       <md-field md-inline
                 style="width: 80%; margin-left: auto; margin-right: auto;">
 
-        <md-input v-model="myLink"></md-input>
+        <md-input v-model="myAttributes"></md-input>
       </md-field>
 
       <md-dialog-actions>
@@ -55,43 +55,44 @@ export default {
   data() {
     return {
       active: false,
-      nameLabel: "",
-      myLink: ""
+      nameAttributes: "",
+      myAttributes: ""
     };
   },
   components: {},
-  props: ["links", "selectedObject"],
+  props: ["attributes", "selectedObject"],
   methods: {
     modify: function() {
       console.log("modify");
-      console.log(this.links);
-      this.nameLabel = this.links.name.get();
-      this.myLink = this.links.link.get();
+      console.log(this.attributes);
+      this.nameAttributes = this.attributes.name.get();
+      this.myAttributes = this.attributes.value.get();
       this.active = true;
       // event.$emit("renameGroup", group);
     },
-    deleteLink: function() {
-      console.log(this.links);
+    deleteAttributes: function() {
+      console.log("ICI EST LA SUPPRESSION DES ATTRIBUTES");
+      console.log(this.attributes);
       console.log(this.selectedObject);
       var test = this.selectedObject.getRelationsByAppNameByType(
-        "links",
-        "hasURL"
+        "attributes",
+        "hasAttributes"
       );
-      console.log(test[0]);
+      // console.log(test[0]);
       for (let i = 0; i < test[0].nodeList2.length; i++) {
-        test[0].nodeList2[i].element.load(myLink => {
-          if (myLink === this.links)
+        test[0].nodeList2[i].element.load(allAttributes => {
+          if (allAttributes === this.attributes)
             this.selectedObject.removeFromExistingRelationByApp(
-              "links",
-              "hasURL",
+              "attributes",
+              "hasAttributes",
               test[0].nodeList2[i]
             );
         });
       }
     },
     myConfirm: function() {
-      this.links.name.set(this.nameLabel);
-      this.links.link.set(this.myLink);
+      this.attributes.name.set(this.nameAttributes);
+      this.attributes.value.set(this.myAttributes);
       this.active = false;
     }
   },

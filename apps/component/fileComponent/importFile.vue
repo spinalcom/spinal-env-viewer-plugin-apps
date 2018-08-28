@@ -96,7 +96,7 @@ export default {
       this.app
         .getAssociatedElementsByNodeByRelationType(
           this.selectedObject,
-          "Files-"
+          "HasFiles-"
         )
         .then(tabofAllFile => {
           // console.log(tabofAllFile);
@@ -104,7 +104,7 @@ export default {
             this.app
               .getAssociatedElementsByNodeByRelationType(
                 this.selectedObject,
-                "Files"
+                "HasFiles"
               )
               .then(tabofAllFile => {
                 // console.log(tabofAllFile);
@@ -140,8 +140,8 @@ export default {
                   }
                   // console.log(myDirectory);
                   this.selectedObject.addToExistingRelationByApp(
-                    "file",
-                    "Files",
+                    "files",
+                    "hasFiles",
                     tmp
                   );
                   // send de la création du directory for bind

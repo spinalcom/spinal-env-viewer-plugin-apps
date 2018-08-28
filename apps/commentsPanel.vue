@@ -1,53 +1,70 @@
 <template>
-  <div class="container-comments" id="app" style=" box-sizing: border-box; height: calc(100% - 50px)">
+  <div class="container-comments"
+       id="app"
+       style=" box-sizing: border-box; height: calc(100% - 50px)">
 
+    <md-dialog :md-active.sync="active"
+               v-model="value"
+               md-confirm-text="Done"
+               @md-confirm="myConfirm()">
+      <md-field style="margin:unset">
+        <label>Textarea</label>
+        <md-textarea v-model="value"></md-textarea>
+      </md-field>
+      <md-dialog-actions>
+        <md-button class="md-primary"
+                   @click="active = false">Close</md-button>
+        <md-button class="md-primary"
+                   @click="myConfirm()">Confirm</md-button>
+      </md-dialog-actions>
+    </md-dialog>
 
-        <md-dialog :md-active.sync="active" v-model="value" md-confirm-text="Done" @md-confirm="myConfirm()">
-          <md-field style="margin:unset">
-            <label>Textarea</label>
-            <md-textarea v-model="value"></md-textarea>
-          </md-field>
-        <md-dialog-actions>
-        <md-button class="md-primary" @click="active = false">Close</md-button>
-        <md-button class="md-primary" @click="myConfirm()">Confirm</md-button>
-      </md-dialog-actions> 
-        </md-dialog>
-  
+    <md-content id="myList"
+                class="md-scrollbar"
+                style="box-sizing: border-box; overflow-y:auto; height: calc(75% - 20px)">
+      <md-list>
+        <md-list-item style="border-bottom: 1px solid grey; margin-top: 7px"
+                      v-for="(comment, index) in tabDisplay"
+                      :key="index">
+          <div style="width: 88%">
+            <div class="md-list-item-text">
+              <span style="font-size: 15px; color: #819FF7">{{comment.username.get()}}</span>
+              <span style="font-size: 10px"> {{toDate(comment.date.get())}}</span>
+            </div>
+            <pre class="mt-3"
+                 :style="getStyle(comment)"> {{ getMessage(comment)}} </pre>
+          </div>
+          <md-button style="position: absolute;top: 0px;right: 10px;"
+                     class="md-icon-button"
+                     @click="editMessage(comment)">
+            <md-icon>edit</md-icon>
+          </md-button>
+          <md-button style="position: absolute;top: 0px;right: 0px; margin: unset"
+                     @click="removeMessage(comment)">
+            ×
+          </md-button>
+        </md-list-item>
+      </md-list>
 
-<md-content id="myList" class="md-scrollbar" style="box-sizing: border-box; overflow-y:auto; height: calc(75% - 20px)">
-  <md-list>
-    <md-list-item style="border-bottom: 1px solid grey; margin-top: 7px" v-for="(comment, index) in tabDisplay" :key="index">
-      <div style="width: 88%">
-      <div class="md-list-item-text">
-        <span  style="font-size: 15px; color: #819FF7">{{comment.username.get()}}</span>
-        <span style="font-size: 10px"> {{toDate(comment.date.get())}}</span>
-      </div>
-      <pre class="mt-3" :style="getStyle(comment)"> {{ getMessage(comment)}} </pre>
-      </div>
-      <md-button style="position: absolute;top: 0px;right: 10px;" class="md-icon-button" @click="editMessage(comment)">
-          <md-icon>edit</md-icon>
-      </md-button>
-      <md-button style="position: absolute;top: 0px;right: 0px; margin: unset" @click="removeMessage(comment)">
-        ×
-      </md-button>
-    </md-list-item>
-  </md-list>
-
-<!-- <div :style="getStyle(comment)" v-for="(comment, index) in onModelChange()" :key="index">
+      <!-- <div :style="getStyle(comment)" v-for="(comment, index) in onModelChange()" :key="index">
   <div>{{ comment.message.get()}}</div>
     <div>{{comment.username.get()}}</div>
   <div>{{toDate(comment.date.get())}}</div>
 </div> -->
-</md-content>
+    </md-content>
 
-<md-field style="width: calc(100% - 5px);border-radius: 10px height: 23%; background-color: white; ">
+    <md-field style="width: calc(100% - 5px);border-radius: 10px height: 23%; background-color: white; ">
       <label style="color: #819FF7">...</label>
-      <md-textarea class="md-scrollbar" style="-webkit-text-fill-color: black; ;width: 100%; min-height: calc(100% - 10px); resize:unset; margin-top: 10px; padding-top: unset" v-model="message"></md-textarea>
-    <md-button style="min-width: 15px; width: unset; min-height: 15px; height: unset; color: black" @click="addComments">
-      <md-icon style="color: black">send</md-icon>
-    </md-button>
+      <md-textarea class="md-scrollbar"
+                   style="-webkit-text-fill-color: black; ;width: 100%; min-height: calc(100% - 10px); resize:unset; margin-top: 10px; padding-top: unset"
+    
+                   v-model="message"></md-textarea>
+      <md-button style="min-width: 15px; width: unset; min-height: 15px; height: unset; color: black"
+    
+                 @click="addComments">
+        <md-icon style="color: black">send</md-icon>
+      </md-button>
     </md-field>
-
 
   </div>
 </template>
@@ -140,7 +157,7 @@ export default {
           this.currentPanel.selectedObject.element.load(item => {
             // console.log(item);
             // console.log(item.name.get());
-            this.currentPanel.panel.setTitle("comments : " + item.name.get());
+            this.currentPanel.panel.setTitle("Notes : " + item.name.get());
           });
           if (!this.currentPanel.panel.isVisible()) {
             this.currentPanel.panel.setVisible(true);
@@ -155,7 +172,7 @@ export default {
       this.app
         .getAssociatedElementsByNodeByRelationType(
           this.currentPanel.selectedObject,
-          "comments"
+          "hasNotes"
         )
         .then(tabofAllComments => {
           this.tabDisplay = tabofAllComments;
@@ -208,7 +225,7 @@ export default {
         newMessage.message.set(this.message);
         this.currentPanel.selectedObject.addToExistingRelationByApp(
           "comments",
-          "comments",
+          "hasNotes",
           newMessage
         );
         // spinal.contextStudio.graph
@@ -230,7 +247,7 @@ export default {
 
       var test = this.currentPanel.selectedObject.getRelationsByAppNameByType(
         "comments",
-        "comments"
+        "hasNotes"
       );
       console.log(test[0]);
       for (let i = 0; i < test[0].nodeList2.length; i++) {
@@ -238,7 +255,7 @@ export default {
           if (myComments === comment)
             this.currentPanel.selectedObject.removeFromExistingRelationByApp(
               "comments",
-              "comments",
+              "hasNotes",
               test[0].nodeList2[i]
             );
         });
@@ -307,7 +324,7 @@ export default {
       if (typeof spinal.contextStudio.graph != "undefined") {
         // console.log("CREATION OF APP FILE");
         spinal.contextStudio.graph
-          .getApp("comments", ["comments"])
+          .getApp("comments", ["hasNotes"])
           .then(myApp => {
             this.app = myApp;
             this.allComments = this.app.getCharacteristicElement();

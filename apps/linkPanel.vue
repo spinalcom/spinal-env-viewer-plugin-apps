@@ -1,39 +1,49 @@
 <template>
-    <md-content class="container-link" style=" box-sizing: border-box; height: calc(100% - 50px)">
-           <md-dialog :md-active.sync="active">
-             <md-dialog-title>Add Link</md-dialog-title>
+  <md-content class="container-link"
+              style=" box-sizing: border-box; height: calc(100% - 50px)">
+    <md-dialog :md-active.sync="active">
+      <md-dialog-title>Add Link</md-dialog-title>
 
+      <md-field md-inline
+                style="width: 80%; margin-left: auto; margin-right: auto;">
+        <label>Label</label>
+        <md-input v-model="nameLink"></md-input>
+      </md-field>
 
-              <md-field md-inline style="width: 80%; margin-left: auto; margin-right: auto;">
-                <label>Label</label>
-                <md-input v-model="nameLink"></md-input>
-              </md-field>
+      <md-field md-inline
+                style="width: 80%; margin-left: auto; margin-right: auto;">
+        <label>Link</label>
+        <md-input v-model="link"></md-input>
+      </md-field>
 
-              <md-field md-inline style="width: 80%; margin-left: auto; margin-right: auto;">
-                <label>Link</label>
-                <md-input v-model="link"></md-input>
-              </md-field>
-
-
-                  <md-dialog-actions>
-                    <md-button class="md-primary" @click="active = false">Close</md-button>
-                    <md-button class="md-primary" @click="addLink">Save</md-button>
-                  </md-dialog-actions>
-           </md-dialog>
-  <md-toolbar style="box-sizing: border-box;">
-    <md-button style="width: 100%" @click="active = true"> Add Link</md-button>
+      <md-dialog-actions>
+        <md-button class="md-primary"
+                   @click="active = false">Close</md-button>
+        <md-button class="md-primary"
+                   @click="addLink">Save</md-button>
+      </md-dialog-actions>
+    </md-dialog>
+    <md-toolbar style="box-sizing: border-box;">
+      <md-button style="width: 100%"
+                 @click="active = true"> Add Link</md-button>
     </md-toolbar>
 
-    <md-content class="md-scrollbar" style="box-sizing: border-box; overflow-y:auto; height: calc(100% - 60px)">
-    <md-list>
-      <md-list-item style="padding-right: 15px; padding-left: 20px;" v-if="tabDisplay.length > 0" v-for="(links, index) in tabDisplay" :key="index">
-        <a :href="links.link.get()" target="_blank">{{links.name.get()}}
-          <md-tooltip>{{ links.link.get()}}</md-tooltip>
-        </a>
-        <!-- add context menu for delete link -->
-        <contextMenuLink :links="links" :selectedObject="currentPanel.selectedObject"></contextMenuLink>
-      </md-list-item>
-    </md-list>
+    <md-content class="md-scrollbar"
+                style="box-sizing: border-box; overflow-y:auto; height: calc(100% - 60px)">
+      <md-list>
+        <md-list-item style="padding-right: 15px; padding-left: 20px;"
+                      v-if="tabDisplay.length > 0"
+                      v-for="(links, index) in tabDisplay"
+                      :key="index">
+          <a :href="links.link.get()"
+             target="_blank">{{links.name.get()}}
+            <md-tooltip>{{ links.link.get()}}</md-tooltip>
+          </a>
+          <!-- add context menu for delete link -->
+          <contextMenuLink :links="links"
+                           :selectedObject="currentPanel.selectedObject"></contextMenuLink>
+        </md-list-item>
+      </md-list>
     </md-content>
 
   </md-content>
@@ -131,8 +141,8 @@ export default {
       myLink.username.set(spinalSystem.getUser().username);
       myLink.owner.set(spinalSystem.getUser().id);
       this.currentPanel.selectedObject.addToExistingRelationByApp(
-        "link",
-        "link",
+        "links",
+        "hasURL",
         myLink
       );
       // spinal.contextStudio.graph
@@ -158,7 +168,7 @@ export default {
         this.app
           .getAssociatedElementsByNodeByRelationType(
             this.currentPanel.selectedObject,
-            "link"
+            "hasURL"
           )
           .then(tabofAllLink => {
             console.log(tabofAllLink);
@@ -228,7 +238,7 @@ export default {
     // console.log(window.spinal.contextStudio);
     let interval = setInterval(() => {
       if (typeof spinal.contextStudio.graph != "undefined") {
-        spinal.contextStudio.graph.getApp("link", ["link"]).then(app => {
+        spinal.contextStudio.graph.getApp("links", ["hasURL"]).then(app => {
           console.log("CREATE APP LINK");
           this.app = app;
           this.allLinks = this.app.getCharacteristicElement();

@@ -1,21 +1,23 @@
 <template>
-<div>
-<md-menu md-direction="bottom-end">
-      <md-button class="md-icon-button" @click.stop md-menu-trigger>
+  <div>
+    <md-menu md-direction="bottom-end">
+      <md-button class="md-icon-button"
+                 @click.stop
+                 md-menu-trigger>
         <md-icon>more_vert</md-icon>
       </md-button>
       <md-menu-content>
-          <md-menu-item @click="downloadFile">
-            <md-icon>cloud_download</md-icon>download
-          </md-menu-item>
+        <md-menu-item @click="downloadFile">
+          <md-icon>cloud_download</md-icon>download
+        </md-menu-item>
 
-          <!-- <md-menu-item @click="deleteFile">
+        <!-- <md-menu-item @click="deleteFile">
             <md-icon>delete_forever</md-icon>Delete
           </md-menu-item> -->
-          
+
       </md-menu-content>
-</md-menu>
-</div>
+    </md-menu>
+  </div>
 </template>
 
 
