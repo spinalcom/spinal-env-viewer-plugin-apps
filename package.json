@@ -1,6 +1,6 @@
 {
-  "name": "spinal-env-viewer-plugin-apps",
-  "version": "1.0.8",
+q  "name": "spinal-env-viewer-plugin-apps",
+  "version": "1.0.9",
   "description": "",
   "main": "index.vue",
   "scripts": {
