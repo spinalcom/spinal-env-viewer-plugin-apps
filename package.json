@@ -1,20 +1,18 @@
 {
-    "name": "spinal-env-drive-plugin-visa",
-    "version": "1.0.3",
-    "description": "",
-    "main": "main.js",
-    "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "postinstall": "npm run create_plugin_template",
-      "create_plugin_template": "create_plugin_template"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC"
-   "dependencies": {
+  "name": "spinal-env-viewer-plugin-apps",
+  "version": "1.0.8",
+  "description": "",
+  "main": "index.vue",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
     "vue-color": "https://github.com/xiaokaike/vue-color.git",
     "spinal-models-bim_forge": "https://github.com/spinalcom/spinal-models-bim_forge.git",
     "spinal-models-bim_viewer": "https://github.com/spinalcom/spinal-models-bim_viewer.git",
+    "spinal-env-viewer-plugin-circularMenu": "https://github.com/spinalcom/spinal-env-viewer-plugin-circularMenu.git",
     "moment": "^2.22.2"
   },
   "devDependencies": {
