@@ -206,7 +206,7 @@ export default {
 
           var BIMObjectName;
           var tab = this.app.getRelationsByType("hasFiles");
-
+  
           for (let i = 0; i < tab.length; i++) {
             const relation = tab[i];
             let myCheck = false;
