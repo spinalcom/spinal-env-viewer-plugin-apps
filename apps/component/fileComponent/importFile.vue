@@ -1,33 +1,41 @@
 <template>
-<div style="box-sizing: border-box; width: calc(49% - 16px)">
-    
-      <md-button style="box-sizing: border-box;width: calc(100%)" @click="activeTabs = true">Import File</md-button>      
-      <md-dialog-alert
-      :md-active.sync="importDirectoryBool"
-      md-content="Inserting a circular directory is not allowed"/>
+  <div style="box-sizing: border-box; width: calc(49% - 16px)">
 
-      <md-dialog :md-active.sync="activeTabs">
+    <md-button style="box-sizing: border-box;width: calc(100%)"
+               @click="activeTabs = true">Import File</md-button>
+    <md-dialog-alert :md-active.sync="importDirectoryBool"
+                     md-content="Inserting a circular directory is not allowed" />
 
-      <md-tabs md-dynamic-height md-alignment="fixed">
+    <md-dialog :md-active.sync="activeTabs">
+
+      <md-tabs md-dynamic-height
+               md-alignment="fixed">
         <md-tab md-label="Upload">
           <md-field>
-            <md-file ref="fileupload" @md-change="createFile" v-model="multipleFile" multiple  />
+            <md-file ref="fileupload"
+                     @md-change="createFile"
+                     v-model="multipleFile"
+                     multiple />
           </md-field>
         </md-tab>
 
         <md-tab md-label="Drive">
-    <!-- <md-button class="md-primary md-raised" @click="getPath">Get Path</md-button> -->
-          <drive :selectedDirectory="selectedDirectory" :app="app" :selectedObject="selectedObject"></drive>
+          <!-- <md-button class="md-primary md-raised" @click="getPath">Get Path</md-button> -->
+          <drive :selectedDirectory="selectedDirectory"
+                 :app="app"
+                 :selectedObject="selectedObject"></drive>
         </md-tab>
       </md-tabs>
 
       <md-dialog-actions>
-        <md-button class="md-primary" @click="activeTabs = false">Close</md-button>
-        <md-button class="md-primary" @click="saveFile">Save</md-button>
+        <md-button class="md-primary"
+                   @click="activeTabs = false">Close</md-button>
+        <md-button class="md-primary"
+                   @click="saveFile">Save</md-button>
       </md-dialog-actions>
     </md-dialog>
 
-</div>
+  </div>
 </template>
 
 
@@ -96,7 +104,7 @@ export default {
       this.app
         .getAssociatedElementsByNodeByRelationType(
           this.selectedObject,
-          "HasFiles-"
+          "hasFiles-"
         )
         .then(tabofAllFile => {
           // console.log(tabofAllFile);
