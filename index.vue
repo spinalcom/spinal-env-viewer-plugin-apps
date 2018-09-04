@@ -3,6 +3,7 @@
 import Vue from "vue";
 import appsManager from "./appsManager.vue";
 
+require("spinal-env-viewer-plugin-panel_manager");
 require("spinal-env-viewer-plugin-circularMenu");
 const ComponentCtor = Vue.extend(appsManager);
 
@@ -60,12 +61,12 @@ const classExtention = class {
     // icon.innerHTML = ButtonIcon;
     // button1.setToolTip(ButtonLabel);
 
-    this.subToolbar = this.viewer.toolbar.getControl("spinalcom");
-    this.subToolbar.addClass("spinalColorButton");
-    if (!this.subToolbar) {
-      this.subToolbar = new Autodesk.Viewing.UI.ControlGroup("spinalcom");
-      this.viewer.toolbar.addControl(this.subToolbar);
-    }
+    // this.subToolbar = this.viewer.toolbar.getControl("spinalcom");
+    // this.subToolbar.addClass("spinalColorButton");
+    // if (!this.subToolbar) {
+    //   this.subToolbar = new Autodesk.Viewing.UI.ControlGroup("spinalcom");
+    //   this.viewer.toolbar.addControl(this.subToolbar);
+    // }
     // this.subToolbar.addControl(button1);
     this.initialize();
   }
