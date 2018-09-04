@@ -112,7 +112,7 @@ export default {
             this.app
               .getAssociatedElementsByNodeByRelationType(
                 this.selectedObject,
-                "HasFiles"
+                "hasFiles"
               )
               .then(tabofAllFile => {
                 // console.log(tabofAllFile);
