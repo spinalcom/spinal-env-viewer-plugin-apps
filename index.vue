@@ -1,10 +1,9 @@
 
 <script>
+import "spinal-env-viewer-plugin-panel_manager";
+import "spinal-env-viewer-plugin-circularMenu";
 import Vue from "vue";
 import appsManager from "./appsManager.vue";
-
-require("spinal-env-viewer-plugin-panel_manager");
-require("spinal-env-viewer-plugin-circularMenu");
 const ComponentCtor = Vue.extend(appsManager);
 
 const ClassName = "Apps";
