@@ -15,13 +15,13 @@ import commentsPanel from "./apps/commentsPanel.vue";
 import filesPanel from "./apps/filePanel.vue";
 import linkPanel from "./apps/linkPanel.vue";
 import drivePanel from "./apps/drivePanel.vue";
-import collaborator from "./apps/collaborator.vue";
+import DOE from "./apps/DOE.vue";
 
 const commentsComponentCtor = Vue.extend(commentsPanel);
 const filesComponentCtor = Vue.extend(filesPanel);
 const linkComponentCtor = Vue.extend(linkPanel);
 const driveComponentCtor = Vue.extend(drivePanel);
-const collaboratorComponentCtor = Vue.extend(collaborator);
+const DOEComponentCtor = Vue.extend(DOE);
 
 export default {
   name: "appsManager",
@@ -67,8 +67,7 @@ export default {
         check3 = true;
       } else if (this.tabPanel[i].titleLabel.indexOf("drive :") > -1)
         check4 = true;
-      else if (this.tabPanel[i].titleLabel.indexOf("collaborator :") > -1)
-        check5 = true;
+      else if (this.tabPanel[i].titleLabel.indexOf("DOE :") > -1) check5 = true;
     }
 
     if (!check1) {
@@ -88,7 +87,7 @@ export default {
       new commentsComponentCtor().$mount(_container);
       event.$emit("createCommentsPanel", hideOrShow);
       this.tabPanel.push(hideOrShow);
-      window.spinal.panelManager.registerPanel(hideOrShow, "collaborator");
+      window.spinal.panelManager.registerPanel(hideOrShow, "DOE");
     }
     // if (!check2) {
     //   let hideOrShow = new PanelClass(viewer, "files :");
@@ -107,7 +106,7 @@ export default {
     //   new filesComponentCtor().$mount(_container);
     //   event.$emit("createFilesPanel", hideOrShow);
     //   this.tabPanel.push(hideOrShow);
-    //   window.spinal.panelManager.registerPanel(hideOrShow, "collaborator");
+    //   window.spinal.panelManager.registerPanel(hideOrShow, "DOE");
     // }
     // if (!check3) {
     //   let hideOrShow = new PanelClass(viewer, "link :");
@@ -127,7 +126,7 @@ export default {
     //   event.$emit("createLinkPanel", hideOrShow);
     //   this.tabPanel.push(hideOrShow);
 
-    //   window.spinal.panelManager.registerPanel(hideOrShow, "collaborator");
+    //   window.spinal.panelManager.registerPanel(hideOrShow, "DOE");
     // }
 
     // if (!check4) {
@@ -147,10 +146,10 @@ export default {
     //   event.$emit("createDrivePanel", hideOrShow);
     //   this.tabPanel.push(hideOrShow);
 
-    //   window.spinal.panelManager.registerPanel(hideOrShow, "collaborator");
+    //   window.spinal.panelManager.registerPanel(hideOrShow, "DOE");
     // }
     if (!check5) {
-      let hideOrShow = new PanelClass(viewer, "collaborator :");
+      let hideOrShow = new PanelClass(viewer, "DOE :");
       var _container = document.createElement("div");
       _container.className = hideOrShow.container.id + "-pannelcontainer";
       _container.style.height = "300px";
@@ -162,19 +161,19 @@ export default {
 
       hideOrShow.container.style.left = "40%";
       hideOrShow.container.appendChild(_container);
-      new collaboratorComponentCtor().$mount(_container);
-      event.$emit("createCollaboratorPanel", hideOrShow);
+      new DOEComponentCtor().$mount(_container);
+      event.$emit("createDOEPanel", hideOrShow);
       this.tabPanel.push(hideOrShow);
 
-      window.spinal.panelManager.registerPanel(hideOrShow, "collaborator");
+      window.spinal.panelManager.registerPanel(hideOrShow, "DOE");
     }
-    var button1 = new Autodesk.Viewing.UI.Button("collaborator");
+    var button1 = new Autodesk.Viewing.UI.Button("DOE");
     var icon = button1.container.firstChild;
-    button1.setToolTip("collaborator");
+    button1.setToolTip("DOE");
 
     icon.className = "adsk-button-icon md-icon md-icon-font md-theme-default";
     icon.innerHTML = "playlist_add";
-    window.spinal.panelManager.registerButton(button1, "collaborator");
+    window.spinal.panelManager.registerButton(button1, "DOE");
   }
 };
 </script>
