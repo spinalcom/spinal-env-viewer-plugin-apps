@@ -63,7 +63,7 @@ export default {
         console.log(this.currentPanel.selectedObject);
         // this.onModelChange();
       });
-      event.$on("createDOEPanel", panel => {
+      event.$on("createDocumentationPanel", panel => {
         console.log("le panel files a été créer");
         this.currentPanel.panel = panel;
       });
